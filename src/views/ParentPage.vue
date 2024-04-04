@@ -6,7 +6,6 @@
 
 <script setup>
 import MyButton from '@/components/BaseButton.vue';
-
 const handleButtonClick = () => {
     console.log('Button clicked!');
 };
