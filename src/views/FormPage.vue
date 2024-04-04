@@ -1,21 +1,14 @@
 <template>
   <div>
     <div class="progress-bar">
-      <div :style="{ width: progress + '%' }"></div>
+      <div :class="['progress-bar-fill']" :style="progressBarStyle"></div>
     </div>
 
-    <!-- Actions -->
     <div class="buttons">
-      <button v-if="currentStepNumber > 1" class="btn" @click="goBack">
-        Back
-      </button>
-      <button @click="goNext">
-        Next
-      </button>
-      <FormCaseTypePicker v-if="currentStepNumber === 1" @update="processStep" />
-      <FormNewCasePicker v-if="currentStepNumber === 2" @update="processStep" />
-      <FormFileUpload v-if="currentStepNumber === 3" @update="processStep" />
-      <FormThankYou v-if="currentStepNumber === 4" />
+      <button v-if="canGoBack" class="btn" @click="goBack">Back</button>
+      <button @click="goNext">Next</button>
+
+      <component :is="currentFormComponent" @update="processStep" />
     </div>
 
     <pre><code>{{ formName }}</code></pre>
@@ -51,9 +44,26 @@ const goBack = () => {
 const goNext = () => {
   if (currentStepNumber.value < maxSteps) currentStepNumber.value++
 }
-const progress = computed(() => {
-  return (currentStepNumber.value - 1) * (100 / maxSteps)
+
+const canGoBack = computed(() => currentStepNumber.value > 1)
+const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
+const progressBarStyle = computed(() => ({
+  width: progress.value + '%',
+}));
+
+const currentFormComponent = computed(() => {
+  switch (currentStepNumber.value) {
+    case 1:
+      return FormCaseTypePicker
+    case 2:
+      return FormNewCasePicker
+    case 3:
+      return FormFileUpload
+    default:
+      return FormThankYou
+  }
 })
+
 const processStep = (stepData) => {
   // Process step data here
 }
@@ -61,15 +71,11 @@ const processStep = (stepData) => {
 
 <style>
 .progress-bar {
-  width: 100%;
-  height: 10px;
-  background-color: #f1f1f1;
-  margin-bottom: 20px;
+  @apply w-full h-1 bg-gray-300 mb-5;
 }
 
-.progress-bar div {
-  height: 100%;
-  background-color: #007bff;
+.progress-bar-fill {
+  @apply h-full bg-blue-500;
   transition: width 0.3s ease;
 }
 </style>

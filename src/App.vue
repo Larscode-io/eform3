@@ -18,12 +18,12 @@ const mainClass = computed(() => ({
   <div :class="mainClass">
     <header>
       <h1 class=" text-2xl font-bold">Website Title</h1>
+      <button class="tbtn">X</button>
       <nav>
-        <router-link to="/"
-          class="btn bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Home</router-link>
-        <router-link to="/form" class="btn bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Go to
+        <router-link to="/" class="tbtn">Home</router-link>
+        <router-link to="/form" class="tbtn">Go to
           Form</router-link>
-        <router-link to="/parent" class="btn bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Go to
+        <router-link to="/parent" class="tbtn">Go to
           Parent Page</router-link>
       </nav>
     </header>

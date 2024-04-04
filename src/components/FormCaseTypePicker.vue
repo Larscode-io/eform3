@@ -50,7 +50,7 @@ function pickPlan(plan) {
 }
 </script>
 
-<style>
+<style scoped>
 .card {
   /* Basic card styling */
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);

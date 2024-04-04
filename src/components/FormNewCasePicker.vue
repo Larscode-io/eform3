@@ -46,7 +46,7 @@ function pickPlan(plan) {
 }
 </script>
 
-<style>
+<style scoped>
 /* Basic styling to replicate Vuetify's look somewhat */
 .card {
   border: 1px solid #ddd;

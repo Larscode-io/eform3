@@ -23,3 +23,9 @@ const buttonClass = computed(() => {
 const emit = defineEmits(['click']);
 const onClick = () => emit('click');
 </script>
+
+<style scoped>
+.custom-danger-button-demo-class {
+    @apply bg-red-500 hover:bg-red-700 text-white;
+}
+</style>

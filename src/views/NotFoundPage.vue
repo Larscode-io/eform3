@@ -13,7 +13,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* Basic styling; customize as needed */
 .not-found {
     text-align: center;
