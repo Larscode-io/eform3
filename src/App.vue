@@ -1,85 +1,38 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const isForm = computed(() => route.name === 'form')
+const isParent = computed(() => route.name === 'parent')
+
+const mainClass = computed(() => ({
+  'text-center': true,
+  'flex flex-col items-center': isForm.value,
+  'p-5': isParent.value,
+}))
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
+  <div :class="mainClass">
+    <header>
+      <h1 class=" text-2xl font-bold">Website Title</h1>
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <router-link to="/"
+          class="btn bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Home</router-link>
+        <router-link to="/form" class="btn bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Go to
+          Form</router-link>
+        <router-link to="/parent" class="btn bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Go to
+          Parent Page</router-link>
       </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    </header>
+    {{ `The router name: ` + route.name }}
+    <main :class="{ 'bg-blue-100': isForm, 'bg-green-100': isParent }">
+      <router-view />
+    </main>
+    <footer>
+      <p class="text-center py-5 bg-gray-200 mt-10">&copy; 2024 Company</p>
+    </footer>
+  </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
