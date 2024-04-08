@@ -2,7 +2,7 @@
   <div>
     <h1>Opladen van de documenten</h1>
     <p>{{ componentName }}</p>
-    <div class="text-description">
+    <div>
       Toelichting bij het opladen van documenten: U moet hieronder uw digitaal ondertekend stuk van rechtspleging in
       pdf-formaat (bv. verzoekschrift, memorie, …) opladen. Het is verplicht om minstens één bestand op te laden. Het
       stuk van rechtspleging dient ondertekend te zijn door middel van een gekwalificeerde elektronische handtekening.
@@ -10,7 +10,7 @@
       van rechtspleging (bv. afschrift van de bestreden norm, overtuigingsstukken, …) opladen. U wordt eveneens verzocht
       om uw stuk van rechtspleging in een Word-bestand op te laden. Dit zorgt voor een vlottere behandeling van de zaak.
     </div>
-    <div class="card">
+    <div>
       <h2>Opladen van de documenten</h2>
       <form @submit.prevent="submit">
         <fieldset>
@@ -38,7 +38,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 
 const componentName = 'FormFileUpload';
 
@@ -50,21 +49,3 @@ function submit() {
   // Submit form data
 }
 </script>
-
-<style scoped>
-/* Add your CSS styles here */
-.card {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 20px;
-  margin-top: 20px;
-}
-
-.text-description {
-  margin-bottom: 20px;
-}
-
-h2 {
-  color: #1976D2;
-}
-</style>

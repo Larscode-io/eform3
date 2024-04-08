@@ -18,7 +18,6 @@ const mainClass = computed(() => ({
   <div :class="mainClass">
     <header>
       <h1 class=" text-2xl font-bold">Website Title</h1>
-      <button class="tbtn">X</button>
       <nav>
         <router-link to="/" class="tbtn">Home</router-link>
         <router-link to="/form" class="tbtn">Go to
