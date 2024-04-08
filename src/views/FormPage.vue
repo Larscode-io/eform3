@@ -1,14 +1,25 @@
 <template>
   <div>
+    {{ p }}
+
     <div class="progress-bar">
-      <div :class="['progress-bar-fill']" :style="progressBarStyle"></div>
+      <div class="progress-bar-fill" :style="{ width: progressPercentage }"></div>
     </div>
+    <div>
+      <div class="flex justify-center">
+        <button v-if="canGoBack" class="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md" @click="goBack">Back</button>
 
-    <div class="buttons">
-      <button v-if="canGoBack" class="btn" @click="goBack">Back</button>
-      <button @click="goNext">Next</button>
+        <button @click="goNext" class="px-4 py-2 bg-blue-500 text-white rounded-md ">Next</button>
+      </div>
+      <div class="flex justify-center items-center p-4">
+        <div
+          class="w-full max-w-md mx-auto sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl p-5 border rounded-lg shadow-lg bg-white dark:bg-gray-800">
+          <component :is="currentFormComponent" @update="processStep" />
+        </div>
+      </div>
 
-      <component :is="currentFormComponent" @update="processStep" />
+
+
     </div>
 
     <pre><code>{{ formName }}</code></pre>
@@ -47,10 +58,7 @@ const goNext = () => {
 
 const canGoBack = computed(() => currentStepNumber.value > 1)
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
-const progressBarStyle = computed(() => ({
-  width: progress.value + '%',
-}));
-
+const progressPercentage = computed(() => progress.value + '%');
 const currentFormComponent = computed(() => {
   switch (currentStepNumber.value) {
     case 1:
@@ -66,6 +74,7 @@ const currentFormComponent = computed(() => {
 
 const processStep = (stepData) => {
   // Process step data here
+  console.log(stepData)
 }
 </script>
 
