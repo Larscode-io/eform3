@@ -27,6 +27,7 @@
 <script setup>
 import { ref } from 'vue';
 
+const emit = defineEmits(['update']);
 // Component's name can be accessed via `import.meta.env` for build-specific details or omitted
 const componentName = 'FormCaseTypePicker';
 
@@ -44,9 +45,7 @@ const selectedPlan = ref(null);
 
 function pickPlan(plan) {
   selectedPlan.value = plan;
-  // Replace this.$emit with context.emit if using Vue 3's Composition API in options API style
-  // This example does not directly show the emit function due to script setup's encapsulation
-  // context.emit('update', { plan: selectedPlan.value });
+  emit('update', plan);
 }
 </script>
 
