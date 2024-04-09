@@ -1,9 +1,7 @@
 <template>
   <div>
-    {{ p }}
-
     <div class="progress-bar">
-      <div class="progress-bar-fill" :style="{ width: progressPercentage }"></div>
+      <div class="progress-bar-fill" :style="`width: ${progress}% `"></div>
     </div>
     <div>
       <div class="flex justify-center">
@@ -58,7 +56,6 @@ const goNext = () => {
 
 const canGoBack = computed(() => currentStepNumber.value > 1)
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
-const progressPercentage = computed(() => progress.value + '%');
 const currentFormComponent = computed(() => {
   switch (currentStepNumber.value) {
     case 1:
