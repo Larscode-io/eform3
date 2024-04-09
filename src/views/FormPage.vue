@@ -56,18 +56,15 @@ const goNext = () => {
 
 const canGoBack = computed(() => currentStepNumber.value > 1)
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
+const stepComponentMap = {
+  1: FormCaseTypePicker,
+  2: FormNewCasePicker,
+  3: FormFileUpload,
+};
+
 const currentFormComponent = computed(() => {
-  switch (currentStepNumber.value) {
-    case 1:
-      return FormCaseTypePicker
-    case 2:
-      return FormNewCasePicker
-    case 3:
-      return FormFileUpload
-    default:
-      return FormThankYou
-  }
-})
+  return stepComponentMap[currentStepNumber.value] || FormThankYou;
+});
 
 const processStep = (stepData) => {
   // Process step data here
