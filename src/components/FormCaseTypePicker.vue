@@ -45,7 +45,7 @@ const selectedPlan = ref(null);
 
 function pickPlan(plan) {
   selectedPlan.value = plan;
-  emit('update', plan);
+  emit('update', { plan });
 }
 </script>
 

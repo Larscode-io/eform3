@@ -11,7 +11,7 @@
       </div>
       <div class="plans">
         <div v-for="plan in plans" :key="plan.name" @click="pickPlan(plan)"
-          :class="{ 'selected': selectedPlan === plan }">
+          :class="{ 'bg-yellow-300': selectedPlan === plan }">
           <div>
             <h3>{{ plan.name }}</h3>
             <p>{{ plan.description }}</p>
@@ -24,30 +24,30 @@
 
 <script setup>
 import { ref } from 'vue';
+const emit = defineEmits(['update']);
 
 const componentName = 'FormNewCasePicker';
 const plans = ref([
-  { name: 'mem', description: 'memorie' },
-  { name: 'mva', description: 'memorie van antwoord,' },
-  { name: 'mvw', description: 'memorie van wederantwoord,' },
-  { name: 'mtt', description: 'memorie tot tussenkomst' },
-  { name: 'aam', description: 'aanvullende memorie' },
-  { name: 'lme', description: 'laatste memorie' },
-  { name: 'avs', description: 'akte houdende een vordering tot schorsing' },
-  { name: 'sov', description: 'schriftelijke opmerkingen (vordering tot schorsing)' },
-  { name: 'vwg', description: 'verzoek om te worden gehoord' },
-  { name: 'and', description: 'andere' },
+  { name: 'MEM', description: 'Memorie' },
+  { name: 'MVA', description: 'Memorie van antwoord,' },
+  { name: 'MVW', description: 'Memorie van wederantwoord,' },
+  { name: 'MTT', description: 'Memorie tot tussenkomst' },
+  { name: 'AAM', description: 'Aanvullende memorie' },
+  { name: 'LME', description: 'Laatste memorie' },
+  { name: 'AVS', description: 'Akte houdende een vordering tot schorsing' },
+  { name: 'SOV', description: 'Schriftelijke opmerkingen (vordering tot schorsing)' },
+  { name: 'VWG', description: 'Verzoek om te worden gehoord' },
+  { name: 'AND', description: 'Andere' },
 ]);
 const selectedPlan = ref(null);
 
 function pickPlan(plan) {
   selectedPlan.value = plan;
-  // Here you would emit events as needed
+  emit('update', { plan });
 }
 </script>
 
 <style scoped>
-/* Basic styling to replicate Vuetify's look somewhat */
 .card {
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -71,10 +71,4 @@ function pickPlan(plan) {
 .plans div:last-child {
   border-bottom: none;
 }
-
-.selected {
-  background-color: #ff0;
-}
-
-/* Add more styling as needed */
 </style>
