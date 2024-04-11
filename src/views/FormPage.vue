@@ -66,7 +66,6 @@ const currentFormComponent = computed(() => {
 });
 
 const processStep = (stepData) => {
-  console.log(stepData)
   form.value = { ...form.value, ...stepData }
 }
 </script>
