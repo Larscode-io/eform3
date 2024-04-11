@@ -27,7 +27,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import FormJuDocSubmit from '@/components/FormJuDocSubmit.vue'
+import FormJuDocPicker from '@/components/FormJuDocPicker.vue'
 import FormJuDocUpload from '@/components/FormJuDocUpload.vue'
 import FormThankYou from '@/components/FormThankYou.vue'
 import FormNewCasePicker from "@/components/FormNewCasePicker.vue";
@@ -36,7 +36,6 @@ const maxSteps = 4
 const currentStepNumber = ref(1)
 const formName = ref('')
 const form = ref({
-  plan: null,
   email: null,
   name: null,
   password: null,
@@ -57,8 +56,8 @@ const goNext = () => {
 const canGoBack = computed(() => currentStepNumber.value > 1)
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
 const stepComponentMap = {
-  1: FormJuDocSubmit,
-  2: FormNewCasePicker,
+  1: FormNewCasePicker,
+  2: FormJuDocPicker,
   3: FormJuDocUpload,
 };
 
@@ -67,10 +66,8 @@ const currentFormComponent = computed(() => {
 });
 
 const processStep = (stepData) => {
-  // Process step data here
   console.log(stepData)
-  console.log(stepData)
-  console.log(stepData)
+  form.value = { ...form.value, ...stepData }
 }
 </script>
 
