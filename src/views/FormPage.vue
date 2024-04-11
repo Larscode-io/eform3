@@ -27,8 +27,8 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import FormCaseTypePicker from '@/components/FormCaseTypePicker.vue'
-import FormFileUpload from '@/components/FormFileUpload.vue'
+import FormJuDocSubmit from '@/components/FormJuDocSubmit.vue'
+import FormJuDocUpload from '@/components/FormJuDocUpload.vue'
 import FormThankYou from '@/components/FormThankYou.vue'
 import FormNewCasePicker from "@/components/FormNewCasePicker.vue";
 
@@ -57,9 +57,9 @@ const goNext = () => {
 const canGoBack = computed(() => currentStepNumber.value > 1)
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
 const stepComponentMap = {
-  1: FormCaseTypePicker,
+  1: FormJuDocSubmit,
   2: FormNewCasePicker,
-  3: FormFileUpload,
+  3: FormJuDocUpload,
 };
 
 const currentFormComponent = computed(() => {

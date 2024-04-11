@@ -39,7 +39,7 @@
 
 <script setup>
 
-const componentName = 'FormFileUpload';
+const componentName = 'FormJuDocUpload';
 
 function clear() {
   // Logic to reset form

@@ -29,7 +29,7 @@ import { ref } from 'vue';
 
 const emit = defineEmits(['update']);
 // Component's name can be accessed via `import.meta.env` for build-specific details or omitted
-const componentName = 'FormCaseTypePicker';
+const componentName = 'FormJuDocSubmit';
 
 const plans = ref([
   {
