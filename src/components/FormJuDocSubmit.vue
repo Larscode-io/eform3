@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Elektronisch platform</h1>
     <p>{{ componentName }}</p>
     <div class="card elevation-12">
       <div class="toolbar primary">

@@ -5,13 +5,13 @@
     </div>
     <div>
       <div class="flex justify-center">
-        <button v-if="canGoBack" class="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md" @click="goBack">Back</button>
+        <button v-if="canGoBack" class="px-4 py-2 mr-2 text-white bg-blue-500 rounded-md" @click="goBack">Back</button>
 
-        <button @click="goNext" class="px-4 py-2 bg-blue-500 text-white rounded-md ">Next</button>
+        <button @click="goNext" class="px-4 py-2 text-white bg-blue-500 rounded-md ">Next</button>
       </div>
-      <div class="flex justify-center items-center p-4">
+      <div class="flex items-center justify-center p-4">
         <div
-          class="w-full max-w-md mx-auto sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl p-5 border rounded-lg shadow-lg bg-white dark:bg-gray-800">
+          class="w-full max-w-md p-5 mx-auto bg-white border rounded-lg shadow-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl dark:bg-gray-800">
           <component :is="currentFormComponent" @update="processStep" />
         </div>
       </div>
@@ -68,6 +68,8 @@ const currentFormComponent = computed(() => {
 
 const processStep = (stepData) => {
   // Process step data here
+  console.log(stepData)
+  console.log(stepData)
   console.log(stepData)
 }
 </script>
