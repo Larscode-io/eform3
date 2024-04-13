@@ -39,7 +39,7 @@ const isParent = computed(() => route.name === 'parent')
 				</div>
 			</nav>
 		</header>
-		{{ `The router name: ` + route.name }}
+		<!-- {{ `The router name: ` + route.name }} -->
 		<main :class="{ 'bg-blue-100': isForm, 'bg-green-100': isParent }">
 			<router-view />
 		</main>
