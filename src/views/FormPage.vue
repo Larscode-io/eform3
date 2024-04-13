@@ -4,9 +4,6 @@
       <div class="progress-bar-fill" :style="`width: ${progress}% `"></div>
     </div>
     <div>
-      <div class="flex justify-center">
-        {{ currentStepNumber }}/{{ maxSteps }}, {{ progress }}
-      </div>
       <div class="flex items-center justify-between p-4">
         <button v-if="canGoBack" class="self-start px-4 py-2 mr-2 text-white bg-blue-500 rounded-md"
           @click="goBack">Back</button>
