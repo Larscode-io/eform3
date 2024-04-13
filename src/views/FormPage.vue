@@ -11,7 +11,8 @@
         <div>
           <component :is="currentFormComponent" @update="processStep" />
         </div>
-        <button @click="goNext" class="self-start px-4 py-2 text-white bg-blue-500 rounded-md ">Next</button>
+        <button v-if="canGoNext" @click="goNext"
+          class="self-start px-4 py-2 text-white bg-blue-500 rounded-md ">Next</button>
       </div>
 
 
@@ -70,6 +71,7 @@ const stepComponentMap = createStepComponentMap(components);
 
 const currentFormComponent = computed(() => getStepComponentMap(stepComponentMap, currentStepNumber.value));
 const canGoBack = computed(() => currentStepNumber.value > 1)
+const canGoNext = computed(() => currentStepNumber.value < maxSteps)
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
 
 const getStepComponentMap = (map, stepNumber) => {
