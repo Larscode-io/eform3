@@ -1,8 +1,8 @@
 <template>
   <div>
     <p>{{ componentName }}</p>
-    <div class="card">
-      <select v-model="selectedJuDoc">
+    <div class="p-4 border border-gray-300 rounded">
+      <select v-model="selectedJuDoc" class="w-full p-2 border border-gray-300 rounded">
         <option disabled>Specifieer het stuk van rechtspleging dat u neerlegt</option>
         <option v-for="juDoc in juDocs" :key="juDoc.name" :value="juDoc">{{ `${juDoc.name} ${juDoc.description}` }}
         </option>
@@ -33,29 +33,3 @@ watch(selectedJuDoc, (newValue) => {
   emit('update', { docType: newValue });
 });
 </script>
-
-<style scoped>
-.card {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 20px;
-  margin-top: 20px;
-}
-
-.toolbar {
-  background-color: #1976D2;
-  color: white;
-  padding: 10px;
-  border-radius: 4px;
-}
-
-.juDocs div {
-  cursor: pointer;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-.juDocs div:last-child {
-  border-bottom: none;
-}
-</style>
