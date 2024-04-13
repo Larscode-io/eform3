@@ -1,32 +1,27 @@
 <template>
   <div>
     <p>{{ componentName }}</p>
-    <div class="card elevation-12">
-      <div class="toolbar primary">
-        <h2>
-          Documenten Indienen: Nieuwe Zaak (N) of Bestaande Zaak (B).
-        </h2>
-      </div>
-      <div class="card">
-        <div v-for="caseType in caseTypes" :key="caseType.name"
-          :class="{ 'bg-yellow-300': selectedCaseType === caseType }" @click="pickCaseType(caseType)">
-          <div>
-            <span>{{ `${caseType.name}: ${caseType.description}` }}</span>
-          </div>
-        </div>
+    <div class="p-4 bg-white rounded-lg shadow-md">
+      <h2 class="mb-4 text-xl font-bold">
+        Selecteer het type zaak: Nieuwe zaak (N) of Bestaande zaak (B).
+      </h2>
+      <div class="space-y-4">
+        <label v-for="caseType in caseTypes" :key="caseType.name" class="flex items-center">
+          <input type="radio" :value="caseType" v-model="selectedCaseType" @change="pickCaseType(caseType)"
+            class="mr-2">
+          <span>{{ `${caseType.code}: ${caseType.description}` }}</span>
+        </label>
       </div>
     </div>
     <div v-if="selectedCaseType">
-      <h2>Uw keuze</h2>
+      <h2 class="text-xl font-bold">Uw keuze</h2>
       <p>{{ selectedCaseType?.name }}</p>
-
-
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, } from 'vue';
 
 const emit = defineEmits(['update']);
 const componentName = 'FormNewCasePicker';
@@ -35,16 +30,15 @@ const caseTypes = ref([
   {
     code: 'N',
     name: 'Nieuwe Zaak',
-    description: 'Documenten Indienen voor Nieuwe Aanmelding',
+    description: 'Documenten indienen voor nieuwe aanmelding',
   },
   {
     code: 'B',
     name: 'Bestaande Zaak',
-    description: 'Documenten Toevoegen aan Bestaand Dossier',
+    description: 'Documenten toevoegen aan bestaand dossier',
   },
 ]);
 const selectedCaseType = ref(null);
-
 function pickCaseType(caseType) {
   selectedCaseType.value = caseType;
   emit('update', { caseType });
@@ -52,28 +46,40 @@ function pickCaseType(caseType) {
 </script>
 
 <style scoped>
-.card {
-  /* Basic card styling */
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+input[type="radio"] {
+  display: none;
 }
 
-.toolbar.primary {
-  /* Toolbar styling, assuming 'primary' is a color theme */
-  background-color: #1976D2;
-  color: white;
+input[type="radio"]+span {
+  position: relative;
+  padding-left: 2.5em;
+  cursor: pointer;
 }
 
-.plans .yellow {
-  /* Highlighting for selected plans */
-  background-color: yellow;
+input[type="radio"]+span:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  border: 2px solid #CBD5E0;
+  transition: border-color 0.2s ease-in-out;
 }
 
-.card {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 20px;
-  margin-top: 20px;
+input[type="radio"]:checked+span:before {
+  border-color: #CBD5E0;
 }
 
-/* Additional styles as needed */
+input[type="radio"]:checked+span:after {
+  content: '';
+  position: absolute;
+  left: 0.4em;
+  top: 0.4em;
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background-color: #CBD5E0;
+}
 </style>
