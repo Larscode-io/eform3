@@ -15,7 +15,7 @@
       "eslint --fix"
     ],
     "*.vue": [
-      "npx vue-cli-service lint"
+      "vue-cli-service lint"
     ]
   },
   "dependencies": {
