@@ -32,7 +32,7 @@ const isParent = computed(() => route.name === 'parent')
 							<router-link to="/" class="px-3 py-2 text-gray-900 hover:bg-gray-100">Home</router-link>
 							<router-link to="/form" class="px-3 py-2 text-gray-900 hover:bg-gray-100">Go to
 								Form</router-link>
-							<router-link to="/parent" class="px-3 py-2 text-gray-900 hover:bg-gray-100">Go to Parent
+							<router-link to="/parent" class="px-3 py-2 text-gray-900 hover:bg-gray-100">Go to Test
 								Page</router-link>
 						</div>
 					</div>
