@@ -1,3 +1,10 @@
+// check VueUse useDropZone and useFiuleDrop to implement drag and drop file upload
+// https://vueuse.org/core/useDropZone/
+// https://vueuse.org/core/useFileDrop/
+// still another feature that can be added is to show a success message when the upload is complete
+// a highly recommended feature is to add a loading spinner when the file is being uploaded
+// the form should be disabled when the file is being uploaded
+//
 <template>
   <div class="p-4">
     <h1 class="mb-4 text-2xl font-bold">Opladen van de documenten</h1>
