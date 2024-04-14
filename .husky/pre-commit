@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# lint-staged refers to the lint-staged tool that is installed as a Node.js package
 # lint-staged is a Node.js package that allows you to run linters on your staged files
-# lint-staged reads its configuration from .lintstagedrc.json
+# lint-staged reads its configuration from .lintstagedrc.json or package.json
+# we are using here the package.json file to configure lint-staged
 npx lint-staged
