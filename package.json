@@ -12,12 +12,10 @@
   },
   "lint-staged": {
     "*.js": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ],
     "*.vue": [
-      "vue-cli-service lint",
-      "git add"
+      "npx vue-cli-service lint"
     ]
   },
   "dependencies": {
@@ -27,6 +25,8 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.3",
     "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/cli-plugin-eslint": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-prettier": "^8.0.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.49.0",
