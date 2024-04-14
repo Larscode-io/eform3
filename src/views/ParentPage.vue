@@ -12,7 +12,6 @@
         <div class="p-4 text-white bg-red-500">Item 1</div>
         <div class="flex-grow p-4 text-white bg-green-500">Item 2 (grows to use available space)</div>
         <div class="p-4 text-white bg-blue-500">Item 3</div>
-        <div class="p-4 text-white bg-blue-500">Item 3</div>
     </div>
 </template>
 
