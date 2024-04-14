@@ -5,18 +5,15 @@
     </div>
     <div>
       <div class="flex items-center justify-between p-4">
-        <button v-if="canGoBack" class="self-start px-4 py-2 mr-2 text-white bg-blue-500 rounded-md"
-          @click="goBack">Back</button>
+        <button :class="['self-start px-4 py-2 mr-2 text-white  rounded-md', canGoBack ? 'bg-blue-500' : 'bg-gray-300']"
+          :disabled="!canGoBack" @click="goBack">Back</button>
 
         <div>
           <component :is="currentFormComponent" @update="processStep" />
         </div>
-        <button v-if="canGoNext" @click="goNext"
-          class="self-start px-4 py-2 text-white bg-blue-500 rounded-md ">Next</button>
+        <button :class="['self-start px-4 py-2 text-white rounded-md', canGoNext ? 'bg-blue-500' : 'bg-gray-300']"
+          :disabled="!canGoNext" @click="goNext">Next</button>
       </div>
-
-
-
     </div>
 
     <pre><code>{{ formName }}</code></pre>
