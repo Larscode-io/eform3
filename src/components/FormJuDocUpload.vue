@@ -1,3 +1,9 @@
+<script setup>
+const handleFileUpload = (event) => {
+  const files = event.target.files;
+  console.log(files);
+};
+</script>
 <template>
   <div class="p-4">
     <h1 class="mb-4 text-2xl font-bold">Opladen van de documenten</h1>
@@ -17,7 +23,7 @@
               </svg>
               <span class="font-medium text-gray-600">Upload file</span>
             </label>
-            <input id="upload1" type="file" class="hidden" />
+            <input id="upload1" type="file" multiple class="hidden" @change="handleFileUpload">
           </div>
         </fieldset>
         <fieldset class="mb-4">
@@ -31,7 +37,7 @@
               </svg>
               <span class="font-medium text-gray-600">Upload file</span>
             </label>
-            <input id="upload2" type="file" multiple class="hidden" />
+            <input id="upload2" type="file" class="hidden" @change="handleFileUpload" multiple />
           </div>
         </fieldset>
         <fieldset class="mb-4">
@@ -45,7 +51,7 @@
               </svg>
               <span class="font-medium text-gray-600">Upload file</span>
             </label>
-            <input id="upload3" type="file" class="hidden" />
+            <input id="upload3" type="file" class="hidden" @change="handleFileUpload" multiple />
           </div>
         </fieldset>
         <fieldset class="mb-4">
