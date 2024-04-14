@@ -1,31 +1,52 @@
-// check VueUse useDropZone and useFiuleDrop to implement drag and drop file upload
-// https://vueuse.org/core/useDropZone/
-// https://vueuse.org/core/useFileDrop/
-// still another feature that can be added is to show a success message when the upload is complete
-// a highly recommended feature is to add a loading spinner when the file is being uploaded
-// the form should be disabled when the file is being uploaded
-//
 <template>
   <div class="p-4">
     <h1 class="mb-4 text-2xl font-bold">Opladen van de documenten</h1>
-    <p class="mb-4">{{ componentName }}</p>
     <div class="mb-4">
       <!-- Document upload instructions -->
     </div>
     <div>
-      <h2 class="mb-4 text-xl font-bold">Opladen van de documenten</h2>
       <form @submit.prevent="submit">
         <fieldset class="mb-4">
           <legend class="font-bold">Digitaal ondertekend stuk van rechtspleging</legend>
-          <input type="file" class="p-2 border" />
+          <div class="p-4 border border-blue-900 rounded-md shadow-md bg-gray-50 w-36">
+            <label for="upload1" class="flex flex-col items-center gap-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 fill-white stroke-blue-900" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span class="font-medium text-gray-600">Upload file</span>
+            </label>
+            <input id="upload1" type="file" class="hidden" />
+          </div>
         </fieldset>
         <fieldset class="mb-4">
           <legend class="font-bold">Bijlage(n) bij het stuk van rechtspleging</legend>
-          <input type="file" multiple class="p-2 border" />
+          <div class="p-4 border border-blue-900 rounded-md shadow-md bg-gray-50 w-36">
+            <label for="upload2" class="flex flex-col items-center gap-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 fill-white stroke-blue-900" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span class="font-medium text-gray-600">Upload file</span>
+            </label>
+            <input id="upload2" type="file" multiple class="hidden" />
+          </div>
         </fieldset>
         <fieldset class="mb-4">
           <legend class="font-bold">Word-versie van het stuk van rechtspleging</legend>
-          <input type="file" class="p-2 border" />
+          <div class="p-4 border border-blue-900 rounded-md shadow-md bg-gray-50 w-36">
+            <label for="upload3" class="flex flex-col items-center gap-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 fill-white stroke-blue-900" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span class="font-medium text-gray-600">Upload file</span>
+            </label>
+            <input id="upload3" type="file" class="hidden" />
+          </div>
         </fieldset>
         <fieldset class="mb-4">
           <legend class="font-bold">Vermeld het e-mailadres waarop u een bewijs van het tijdstip van neerlegging wenst
