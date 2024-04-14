@@ -47,37 +47,33 @@ const form = ref({
 const components = [FormNewCasePicker, FormUserDetails, FormJuDocPicker, FormJuDocUpload, FormThankYou];
 const maxSteps = components.length;
 
-const goBack = () => {
-  changeStepNumber(-1)
-}
-
-const goNext = () => {
-  changeStepNumber(1)
-}
-
+// Navigation stuff
+const canGoBack = computed(() => currentStepNumber.value > 1)
+const canGoNext = computed(() => currentStepNumber.value < maxSteps)
+const goBack = () => { changeStepNumber(-1) }
+const goNext = () => { changeStepNumber(1) }
 const changeStepNumber = (change) => {
   const newStep = currentStepNumber.value + change;
   if (newStep >= 1 && newStep <= maxSteps) {
     currentStepNumber.value = newStep;
   }
 };
+
+// Component stuff
 const createStepComponentMap = (components) => {
-  return components.reduce((acc, component, index) => {
-    acc[index + 1] = component;
-    return acc;
+  return components.reduce((componentMap, component, index) => {
+    componentMap[index + 1] = component;
+    return componentMap;
   }, {});
 };
 const stepComponentMap = createStepComponentMap(components);
-
+const getStepComponentMap = (map, stepNumber) => { return map[stepNumber] || FormThankYou; };
 const currentFormComponent = computed(() => getStepComponentMap(stepComponentMap, currentStepNumber.value));
-const canGoBack = computed(() => currentStepNumber.value > 1)
-const canGoNext = computed(() => currentStepNumber.value < maxSteps)
+
+// Progress bar
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
 
-const getStepComponentMap = (map, stepNumber) => {
-  return map[stepNumber] || FormThankYou;
-};
-
+// Here we processess the data from the form components
 const processStep = (stepData) => {
   form.value = { ...form.value, ...stepData }
 }
