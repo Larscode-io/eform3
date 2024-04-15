@@ -3,5 +3,9 @@
 
 # lint-staged is a Node.js package that allows you to run linters on your staged files
 # lint-staged reads its configuration from .lintstagedrc.json or package.json
-# we are using here the package.json file to configure lint-staged
+# we are using here the package.json file to configure lint-staged, something like this:
+#   "lint-staged": {
+#     "*.js": [ "eslint --fix" ],
+#     "*.vue": [ "vue-cli-service lint" ]
+#   },
 npx lint-staged
