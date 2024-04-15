@@ -9,7 +9,7 @@
           :disabled="!canGoBack" @click="goBack">Back</button>
 
         <div>
-          <component :is="currentFormComponent" @update="processStep" />
+          <component :is="currentFormComponent" :form @update="processStep" />
         </div>
         <button :class="['self-start px-4 py-2 text-white rounded-md', canGoNext ? 'bg-blue-500' : 'bg-gray-300']"
           :disabled="!canGoNext" @click="goNext">Next</button>
@@ -28,6 +28,7 @@ import FormJuDocUpload from '@/components/FormJuDocUpload.vue'
 import FormThankYou from '@/components/FormThankYou.vue'
 import FormNewCasePicker from "@/components/FormNewCasePicker.vue";
 import FormUserDetails from "@/components/FormUserDetails.vue";
+import FormConfirmation from "@/components/FormConfirmation.vue";
 
 const currentStepNumber = ref(1)
 const formName = ref('')
@@ -41,7 +42,7 @@ const form = ref({
   mail: false,
 })
 
-const components = [FormNewCasePicker, FormUserDetails, FormJuDocPicker, FormJuDocUpload, FormThankYou];
+const components = [FormNewCasePicker, FormUserDetails, FormJuDocPicker, FormJuDocUpload, FormConfirmation, FormThankYou];
 const maxSteps = components.length;
 
 // Navigation stuff
