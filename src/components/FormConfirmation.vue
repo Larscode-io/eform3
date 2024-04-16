@@ -25,7 +25,7 @@ onMounted(() => {
                     class="w-4 h-4 text-blue-600 bg-transparent border-gray-300" />
                 <div v-if="receiveConfirmation">
                     <input type="email" placeholder="Vul hier uw e-mailadres in" :value="props.form.email"
-                        @input="$emit('update', { email: $event.target.value })"
+                        @input="$emit('update', { confirmationEmail: $event.target.value })"
                         class="w-full px-2 py-1 mt-2 border border-gray-300 rounded" />
                 </div>
             </label>
