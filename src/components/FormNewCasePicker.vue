@@ -42,6 +42,6 @@ const caseTypes = ref([
 const selectedCaseType = ref(null);
 function pickCaseType(caseType) {
   selectedCaseType.value = caseType;
-  emit('update', { caseType });
+  emit('update', { caseType }); // in the template in an @input we write @input="emit('update', { $event })"
 }
 </script>

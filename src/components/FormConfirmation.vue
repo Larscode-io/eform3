@@ -4,7 +4,7 @@ const props = defineProps({
     form: Object,
 });
 const emit = defineEmits(['update']);
-const confirmationEmail = ref('');
+const confirmationEmail = ref(props.form.email || '');
 const receiveConfirmation = ref(false);
 const componentName = 'FormConfirmation';
 
@@ -24,8 +24,22 @@ watch(confirmationEmail, (newVal) => {
             <label>Klik hier als u een bevestiging van de indiening wilt ontvangen:
                 <input type="checkbox" v-model="receiveConfirmation"
                     class="w-4 h-4 text-blue-600 bg-transparent border-gray-300" />
+                <!-- here we use a local variable with v-model -->
                 <div v-if="receiveConfirmation">
                     <input type="text" placeholder="Vul hier uw e-mailadres in" v-model="confirmationEmail"
+                        class="w-full px-2 py-1 mt-2 border border-gray-300 rounded" />
+                </div>
+                <!-- here we use a decomposed version of the previous v-model -->
+                <div v-if="receiveConfirmation">
+                    <input type="text" placeholder="Vul hier uw e-mailadres in" :value="props.form.confirmationEmail"
+                        @input="confirmationEmail = $event.target.value"
+                        class="w-full px-2 py-1 mt-2 border border-gray-300 rounded" />
+                </div>
+                <!-- emit to parent -->
+                <div v-if="receiveConfirmation">
+                    <input type="text" placeholder="Vul hier uw e-mailadres in" :value="props.form.confirmationEmail"
+                        @input="emit('update',
+                            { confirmationEmail: $event.target.value })"
                         class="w-full px-2 py-1 mt-2 border border-gray-300 rounded" />
                 </div>
             </label>
