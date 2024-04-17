@@ -35,7 +35,7 @@ watch(confirmationEmail, (newVal) => {
                         @input="confirmationEmail = $event.target.value"
                         class="w-full px-2 py-1 mt-2 border border-gray-300 rounded" />
                 </div>
-                <!-- directly emit to parent -->
+                <!-- directly emit data to parent -->
                 <div v-if="receiveConfirmation">
                     <input type="text" placeholder="Vul hier uw e-mailadres in" :value="props.form.confirmationEmail"
                         @input="emit('update',
