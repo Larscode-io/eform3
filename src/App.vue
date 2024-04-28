@@ -1,10 +1,32 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const isForm = computed(() => route.name === 'form')
 const isParent = computed(() => route.name === 'parent')
+
+const supportedLanguages = ['en', 'nl', 'fr'];
+const defaultTaal = 'en'; // Default language if browser's language isn't supported
+
+const getInitialLanguage = () => {
+  const browserLanguage = navigator.language.split('-')[0];
+  console.log(`The browser language is: ${browserLanguage}`);
+  return supportedLanguages.includes(browserLanguage) ? browserLanguage : defaultTaal;
+};
+const taal = ref(window.localStorage.getItem("taal") || getInitialLanguage());
+let getStorageLang = () => {
+  console.log(JSON.parse(window.localStorage.getItem("taal")));
+};
+const updateLangInLocalStorage = () => {
+  console.log(`The selected language is: ${taal.value}`)
+  localStorage.setItem("taal", taal.value);
+};
+// watch(taal, updateLocalStorage); // not needed because we are using the @change event on the language select element
+onMounted(() => {
+  window.addEventListener("taal_listener", getStorageLang);
+});
+onBeforeUnmount(() => { window.removeEventListener('taal_listener', getStorageLang); });
 </script>
 
 <template>
@@ -23,24 +45,18 @@ const isParent = computed(() => route.name === 'parent')
           <div class="flex">
             <button class="p-2 text-gray-500 md:hidden" aria-expanded="false">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16m-7 6h7"
-                ></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
               </svg>
             </button>
             <div id="right" class="hidden space-x-4 md:flex">
-              <router-link to="/" class="px-3 py-2 text-gray-900 hover:bg-gray-100"
-                >Home</router-link
-              >
-              <router-link to="/form" class="px-3 py-2 text-gray-900 hover:bg-gray-100"
-                >Go to Form</router-link
-              >
-              <router-link to="/parent" class="px-3 py-2 text-gray-900 hover:bg-gray-100"
-                >Go to Test Page</router-link
-              >
+              <router-link to="/" class="px-3 py-2 text-gray-900 hover:bg-gray-100">Home</router-link>
+              <router-link to="/form" class="px-3 py-2 text-gray-900 hover:bg-gray-100">Go to Form</router-link>
+              <router-link to="/parent" class="px-3 py-2 text-gray-900 hover:bg-gray-100">Go to Test Page</router-link>
+              <!-- // language switcher with transparent background -->
+              <select class="px-3 py-2 bg-gray-300 " v-model="taal" @change="updateLangInLocalStorage">
+                <option v-for="lang in supportedLanguages" :key="lang" :value="lang">{{
+                  lang.toUpperCase() }}</option>
+              </select>
             </div>
           </div>
         </div>
