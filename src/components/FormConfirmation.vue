@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 const props = defineProps({
     form: Object,
 });
@@ -11,6 +11,15 @@ const componentName = 'FormConfirmation';
 watch(confirmationEmail, (newVal) => {
     emit('update', { confirmationEmail: newVal });
 });
+watch(confirmationEmail, (newVal) => {
+    emit('update', { fromWatch: newVal });
+});
+watchEffect(() => {
+    emit('update', { fromWatchEffect: confirmationEmail.value });
+})
+// watch waits dom updates so using watchEffect instead would not be better because it would not wait for dom updates and would not be reactive
+// resulting in the input field not being updated with the new value from the parent component when the parent component updates the value
+
 </script>
 
 <!-- // hier parent data tonen en laten bevestigen -->
@@ -27,19 +36,6 @@ watch(confirmationEmail, (newVal) => {
                 <!-- here we use a local variable with v-model -->
                 <div v-if="receiveConfirmation">
                     <input type="text" placeholder="Vul hier uw e-mailadres in" v-model="confirmationEmail"
-                        class="w-full px-2 py-1 mt-2 border border-gray-300 rounded" />
-                </div>
-                <!-- here we use a decomposed version of the previous v-model -->
-                <div v-if="receiveConfirmation">
-                    <input type="text" placeholder="Vul hier uw e-mailadres in" :value="props.form.confirmationEmail"
-                        @input="confirmationEmail = $event.target.value"
-                        class="w-full px-2 py-1 mt-2 border border-gray-300 rounded" />
-                </div>
-                <!-- directly emit data to parent -->
-                <div v-if="receiveConfirmation">
-                    <input type="text" placeholder="Vul hier uw e-mailadres in" :value="props.form.confirmationEmail"
-                        @input="emit('update',
-                            { confirmationEmail: $event.target.value })"
                         class="w-full px-2 py-1 mt-2 border border-gray-300 rounded" />
                 </div>
             </label>
