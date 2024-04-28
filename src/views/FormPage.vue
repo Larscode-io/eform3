@@ -57,7 +57,7 @@ const changeStepNumber = (change) => {
   }
 };
 
-// Component stuff
+// Component stuff here
 const createStepComponentMap = (components) => {
   return components.reduce((componentMap, component, index) => {
     componentMap[index + 1] = component;
