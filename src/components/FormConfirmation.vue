@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 const props = defineProps({
     form: Object,
 });
@@ -8,14 +8,8 @@ const confirmationEmail = ref(props.form.email || '');
 const receiveConfirmation = ref(false);
 const componentName = 'FormConfirmation';
 
-watch(confirmationEmail, (newVal) => {
-    emit('update', { confirmationEmail: newVal });
-});
-watch(confirmationEmail, (newVal) => {
-    emit('update', { fromWatch: newVal });
-});
 watchEffect(() => {
-    emit('update', { fromWatchEffect: confirmationEmail.value });
+    emit('update', { confirmationEmail: confirmationEmail.value });
 })
 // watch waits dom updates so using watchEffect instead would not be better because it would not wait for dom updates and would not be reactive
 // resulting in the input field not being updated with the new value from the parent component when the parent component updates the value
