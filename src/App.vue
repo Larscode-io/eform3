@@ -7,7 +7,7 @@ const isForm = computed(() => route.name === 'form')
 const isParent = computed(() => route.name === 'parent')
 
 const supportedLanguages = ['en', 'nl', 'fr'];
-const defaultTaal = 'en'; // Default language if browser's language isn't supported
+const defaultTaal = 'en'; // Default language if browser's language isn't found in supportedLanguages
 
 const getInitialLanguage = () => {
   const browserLanguage = navigator.language.split('-')[0];
@@ -22,7 +22,6 @@ const updateLangInLocalStorage = () => {
   console.log(`The selected language is: ${taal.value}`)
   localStorage.setItem("taal", taal.value);
 };
-// watch(taal, updateLocalStorage); // not needed because we are using the @change event on the language select element
 onMounted(() => {
   window.addEventListener("taal_listener", getStorageLang);
 });
