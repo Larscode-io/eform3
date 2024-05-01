@@ -9,6 +9,7 @@
           :disabled="!canGoBack" @click="goBack">Back</button>
 
         <div>
+          <p>{{ currentFormComponent.__name }}</p>
           <component :is="currentFormComponent" :form @update="processStep" />
         </div>
         <button :class="['self-start px-4 py-2 text-white rounded-md', canGoNext ? 'bg-blue-500' : 'bg-gray-300']"

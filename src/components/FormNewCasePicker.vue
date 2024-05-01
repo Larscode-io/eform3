@@ -22,10 +22,8 @@
 </template>
 
 <script setup>
-import { ref, } from 'vue';
-
+import { ref } from 'vue';
 const emit = defineEmits(['update']);
-// const componentName = 'FormNewCasePicker';
 
 const caseTypes = ref([
   {
@@ -42,6 +40,6 @@ const caseTypes = ref([
 const selectedCaseType = ref(null);
 function pickCaseType(caseType) {
   selectedCaseType.value = caseType;
-  emit('update', { caseType }); // in the template in an @input we write @input="emit('update', { $event })"
+  emit('update', { caseType }); // inline in the template we write @input="$emit('update', { $event })"
 }
 </script>

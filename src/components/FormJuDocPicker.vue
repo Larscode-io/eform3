@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>{{ componentName }}</p>
     <div class="p-4 border border-gray-300 rounded">
       <select v-model="selectedJuDoc" class="w-full p-2 border border-gray-300 rounded">
         <option disabled>Specifieer het stuk van rechtspleging dat u neerlegt</option>
@@ -15,7 +14,6 @@
 import { ref, watch } from 'vue';
 const emit = defineEmits(['update']);
 
-const componentName = 'FormJuDocPicker';
 const juDocs = ref([
   { name: 'MEM', description: 'Memorie' },
   { name: 'MVA', description: 'Memorie van antwoord' },

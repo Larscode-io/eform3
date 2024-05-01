@@ -3,9 +3,6 @@
     <h1 class="title">
       Dank u.
     </h1>
-    <p>
-      {{ $options.name }}
-    </p>
     <h2 class="subtitle">
       Bedankt voor de neerlegging van uw stuk van rechtspleging. Gelieve te
       controleren of u via e-mail een bewijs van het tijdstip van neerlegging
@@ -15,12 +12,5 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'FormThankYou',
-}
+<script setup>
 </script>
-
-<style scoped>
-
-</style>

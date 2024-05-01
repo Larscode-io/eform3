@@ -6,20 +6,16 @@ const props = defineProps({
 const emit = defineEmits(['update']);
 const confirmationEmail = ref(props.form.email || '');
 const receiveConfirmation = ref(false);
-const componentName = 'FormConfirmation';
 
 watchEffect(() => {
     emit('update', { confirmationEmail: confirmationEmail.value });
 })
-// watch waits dom updates so using watchEffect instead would not be better because it would not wait for dom updates and would not be reactive
-// resulting in the input field not being updated with the new value from the parent component when the parent component updates the value
 
 </script>
 
 <!-- // hier parent data tonen en laten bevestigen -->
 <template>
     <div>
-        <p>{{ componentName }}</p>
         <div class="p-4 border border-gray-300 rounded">
             <h2 class="text-xl font-bold">Bevestiging</h2>
             <pre>{{ JSON.stringify(props.form, null, 2) }}</pre>
