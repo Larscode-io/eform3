@@ -66,7 +66,7 @@ onBeforeUnmount(() => { window.removeEventListener('taal_listener', getStorageLa
       <router-view />
     </main>
     <footer>
-      <p class="py-5 mt-10 text-center bg-gray-200">&copy; 2024 Company</p>
+      <p class="py-5 mt-10 text-center bg-gray-200">&copy; 2024 GwH</p>
     </footer>
   </div>
 </template>
