@@ -45,7 +45,7 @@ const submitIsDone = ref(false);
 
 onMounted(() => {
     // onMounted also triggers when LastPass fills all fields at the same time
-    emit('update', { currentFormIsValid: isValid });
+    emit('update', { currentFormIsValid: isValid.value });
     // log that we emitted ...
     console.log('emitted from onMounted', { currentFormIsValid: isValid });
     if (props.form.firstName) {
@@ -59,7 +59,6 @@ onMounted(() => {
     }
 });
 const submitData = () => {
-    console.log('submit');
     if (!isValid.value) {
         return;
     }
@@ -71,7 +70,6 @@ const submitData = () => {
         currentFormIsValid: isValid.value,
         valid: updatedValidStatus
     });
-    console.log('emitted from submitData');
     submitIsDone.value = true;
 };
 </script>
