@@ -45,7 +45,8 @@ const selectedCaseType = ref(null);
 const isValid = computed(() => selectedCaseType.value !== null);
 function pickCaseType(caseType) {
   selectedCaseType.value = caseType;
-  emit('update', { caseType, currentFormIsValid: isValid, valid: { ...props.form.valid, [props.name]: isValid } });
+  const updatedValidStatus = { ...props.form.valid, [props.name]: isValid.value }
+  emit('update', { casetype: caseType, currentFormIsValid: isValid.value, valid: updatedValidStatus });
 }
 onMounted(() => {
   // if we went back and forth, we have to get the input fields from the form

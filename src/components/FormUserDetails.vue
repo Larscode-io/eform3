@@ -95,8 +95,8 @@ const submitData = () => {
                 <input type="email" id="email" v-model="state.email" @blur="$event => stateDirty.email = true"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
-            <button type="submit"
-                class="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">Continue</button>
+            <button type="submit" class="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">Submit to
+                continue</button>
         </form>
     </div>
 </template>
