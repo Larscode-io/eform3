@@ -11,8 +11,12 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 const emit = defineEmits(['update']);
+const props = defineProps({
+  name: String,
+  form: Object,
+});
 
 const juDocs = ref([
   { name: 'MEM', description: 'Memorie' },
@@ -28,6 +32,15 @@ const juDocs = ref([
 ]);
 const selectedJuDoc = ref(null);
 watch(selectedJuDoc, (newValue) => {
-  emit('update', { docType: newValue });
+  // example: emit('update', { caseType, currentFormIsValid: isValid, valid: { ...props.form.valid, [props.name]: isValid } });
+  emit('update', { docType: newValue, currentFormIsValid: isValid });
+});
+// check if form is valid
+const isValid = computed(() => selectedJuDoc.value !== null);
+onMounted(() => {
+  emit('update', { currentFormIsValid: isValid });
+  if (props.form.docType) {
+    selectedJuDoc.value = props.form.docType;
+  }
 });
 </script>

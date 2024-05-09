@@ -1,8 +1,10 @@
 <script setup>
 import { ref, watchEffect } from 'vue';
 const props = defineProps({
+    name: String,
     form: Object,
 });
+
 const emit = defineEmits(['update']);
 const confirmationEmail = ref(props.form.email || '');
 const receiveConfirmation = ref(false);

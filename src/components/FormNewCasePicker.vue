@@ -22,8 +22,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 const emit = defineEmits(['update']);
+const props = defineProps({
+  name: String,
+  form: Object,
+});
 
 const caseTypes = ref([
   {
@@ -38,8 +42,15 @@ const caseTypes = ref([
   },
 ]);
 const selectedCaseType = ref(null);
+const isValid = computed(() => selectedCaseType.value !== null);
 function pickCaseType(caseType) {
   selectedCaseType.value = caseType;
-  emit('update', { caseType }); // inline in the template we write @input="$emit('update', { $event })"
+  emit('update', { caseType, currentFormIsValid: isValid, valid: { ...props.form.valid, [props.name]: isValid } });
 }
+onMounted(() => {
+  // if we went back and forth, we have to get the input fields from the form
+  if (props.form.caseType) {
+    selectedCaseType.value = props.form.caseType;
+  }
+});
 </script>

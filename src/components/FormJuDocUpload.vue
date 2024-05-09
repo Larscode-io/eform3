@@ -1,4 +1,5 @@
 <script setup>
+// const props = defineProps({ name: String, form: Object, });
 const handleFileUpload = (event) => {
   const files = event.target.files;
   console.log(files);

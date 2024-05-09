@@ -4,21 +4,19 @@
       <div class="progress-bar-fill" :style="`width: ${progress}% `"></div>
     </div>
     <div>
+      <div>{{ name }} -
+        {{ "Current form is " + (form.currentFormIsValid ? "is Valid" : "not Valid") }}</div>
       <div class="flex items-center justify-between p-4">
         <button :class="['self-start px-4 py-2 mr-2 text-white  rounded-md', canGoBack ? 'bg-blue-500' : 'bg-gray-300']"
           :disabled="!canGoBack" @click="goBack">Back</button>
-
         <div>
-          <p>{{ currentFormComponent.__name }}</p>
-          <component :is="currentFormComponent" :form @update="processStep" />
+          <component :is="currentFormComponent" :form :name @update="processStep" />
         </div>
         <button :class="['self-start px-4 py-2 text-white rounded-md', canGoNext ? 'bg-blue-500' : 'bg-gray-300']"
           :disabled="!canGoNext" @click="goNext">Next</button>
       </div>
     </div>
-
-    <pre><code>{{ formName }}</code></pre>
-    <pre><code>{{ form }}</code></pre>
+    <pre>{{ form }}</pre>
   </div>
 </template>
 
@@ -32,7 +30,6 @@ import FormUserDetails from "@/components/FormUserDetails.vue";
 import FormConfirmation from "@/components/FormConfirmation.vue";
 
 const currentStepNumber = ref(1)
-const formName = ref('')
 const form = ref({
   email: null,
   name: null,
@@ -41,16 +38,29 @@ const form = ref({
   recipient: null,
   phone: false,
   mail: false,
+  currentFormIsValid: false,
 })
+const formComponents = [
+  { name: 'FormNewCasePicker', component: FormNewCasePicker },
+  { name: 'FormUserDetails', component: FormUserDetails },
+  { name: 'FormJuDocPicker', component: FormJuDocPicker },
+  { name: 'FormJuDocUpload', component: FormJuDocUpload },
+  { name: 'FormConfirmation', component: FormConfirmation },
+  { name: 'FormThankYou', component: FormThankYou },
+];
+const components = formComponents.map((component) => component.component);
+const getComponentName = (component) => formComponents.find((c) => c.component === component).name;
 
-const components = [FormNewCasePicker, FormUserDetails, FormJuDocPicker, FormJuDocUpload, FormConfirmation, FormThankYou];
 const maxSteps = components.length;
 
 // Navigation stuff
 const canGoBack = computed(() => currentStepNumber.value > 1)
-const canGoNext = computed(() => currentStepNumber.value < maxSteps)
+const canGoNext = computed(() => currentStepNumber.value < maxSteps && form.value.currentFormIsValid)
+
 const goBack = () => { changeStepNumber(-1) }
-const goNext = () => { changeStepNumber(1) }
+const goNext = () => {
+  changeStepNumber(1);
+}
 const changeStepNumber = (change) => {
   const newStep = currentStepNumber.value + change;
   if (newStep >= 1 && newStep <= maxSteps) {
@@ -68,12 +78,14 @@ const createStepComponentMap = (components) => {
 const stepComponentMap = createStepComponentMap(components);
 const getStepComponentMap = (map, stepNumber) => { return map[stepNumber] || FormThankYou; };
 const currentFormComponent = computed(() => getStepComponentMap(stepComponentMap, currentStepNumber.value));
+const name = computed(() => getComponentName(currentFormComponent.value));
 
 // Progress bar
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
 
-// Here we processess the data from the form components
+// Here we processess the data from the components
 const processStep = (stepData) => {
+  // merge the data from the form component with the form data
   form.value = { ...form.value, ...stepData }
 }
 </script>
