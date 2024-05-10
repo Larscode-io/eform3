@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, reactive } from 'vue';
+import { ref, computed, onMounted, reactive, watch } from 'vue';
 const props = defineProps({
     name: String,
     form: Object,
@@ -31,23 +31,24 @@ const isLastNameValid = computed(() => {
 const isFirstNameValid = computed(() => {
     return state.firstName.length > 0;
 });
-// const showError = computed(() => {
-//     return {
-//         email: !isMailValid.value && stateDirty.email,
-//         firstName: !isFirstNameValid.value && stateDirty.firstName,
-//         lastName: !isLastNameValid.value && stateDirty.lastName,
-//     }
-// });
+const showError = computed(() => {
+    return {
+        email: !isMailValid.value && stateDirty.email,
+        firstName: !isFirstNameValid.value && stateDirty.firstName,
+        lastName: !isLastNameValid.value && stateDirty.lastName,
+    }
+});
 const isValid = computed(() =>
     isMailValid.value && isLastNameValid.value && isFirstNameValid.value
 );
+watch(isValid, (newValue) => {
+    emit('update', { currentFormIsValid: newValue });
+    submitData();
+});
 const submitIsDone = ref(false);
 
 onMounted(() => {
-    // onMounted also triggers when LastPass fills all fields at the same time
     emit('update', { currentFormIsValid: isValid.value });
-    // log that we emitted ...
-    console.log('emitted from onMounted', { currentFormIsValid: isValid });
     if (props.form.firstName) {
         state.firstName = props.form.firstName;
     }
@@ -77,26 +78,26 @@ const submitData = () => {
 <template>
     <div class="flex flex-col items-center">
         <h1 class="mb-4 text-2xl font-bold">Details van Indiener</h1>
-        <h2>{{ `isValid is ${isValid}` }}</h2>
+        <h2>{{ `showError is ${JSON.stringify(showError)}` }}</h2>
         <form class="w-96" @submit.prevent="submitData">
             <div class="mb-4">
                 <label for="firstName" class="block mb-2">Voornaam</label>
                 <input type="text" id="firstName" v-model="state.firstName"
-                    @blur="$event => stateDirty.firstName = true"
+                    @blur="$event => stateDirty.firstName = true" @input="$event => isValid ? submitData() : null"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div class="mb-4">
                 <label for="lastName" class="block mb-2">Familienaam</label>
                 <input type="text" id="lastName" v-model="state.lastName" @blur="$event => stateDirty.lastName = true"
+                    @input="$event => isValid ? submitData() : null"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div class="mb-4">
                 <label for="email" class="block mb-2">Email</label>
                 <input type="email" id="email" v-model="state.email" @blur="$event => stateDirty.email = true"
+                    @input="$event => isValid ? submitData() : null"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
-            <button type="submit" class="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">Submit to
-                continue</button>
         </form>
     </div>
 </template>
