@@ -4,54 +4,63 @@
       Selecteer het type zaak: Nieuwe zaak (N) of Bestaande zaak (B).
     </h2>
     <div>
-      <div v-for="caseType in caseTypes" :key="caseType.name" :class="['flex items-center ps-4 border rounded mb-2 cursor-pointer',
-        selectedCaseType === caseType ? 'border-blue-600 bg-blue-100' : 'border-gray-200']"
-        @click="pickCaseType(caseType)">
-        <input type="radio" :id="'radio-' + caseType.code" :value="caseType" v-model="selectedCaseType"
-          class="w-4 h-4 text-blue-600 bg-transparent border-gray-300" @click.stop>
+      <div v-for="caseType in caseTypes" :key="caseType.code" :class="[
+        'flex items-center ps-4 border rounded mb-2 cursor-pointer',
+        selectedCaseCode === caseType.code ? 'border-blue-600 bg-blue-100' : 'border-gray-200'
+      ]" @click="pickCaseType(caseType)">
+        <input type="radio" :id="'radio-' + caseType.code" :value="caseType.code" v-model="selectedCaseCode"
+          class="w-4 h-4 text-blue-600 bg-transparent border-gray-300" @click.stop />
         <label :for="'radio-' + caseType.code" class="w-full py-2 ml-2 text-sm font-medium text-gray-900">
           {{ `${caseType.code}: ${caseType.description}` }}
         </label>
       </div>
     </div>
-    <div v-if="selectedCaseType" class="mt-4">
+    <div v-if="selectedCaseCode" class="mt-4">
       <h2 class="text-xl font-bold">Uw keuze</h2>
-      <p>{{ selectedCaseType.name }}</p>
+      <p>{{ selectedCaseCode }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-const emit = defineEmits(['update']);
+import { ref, computed, onMounted, watch } from 'vue'
+const emit = defineEmits(['update'])
 const props = defineProps({
   name: String,
-  form: Object,
-});
+  form: Object
+})
 
 const caseTypes = ref([
   {
     code: 'N',
     name: 'Nieuwe Zaak',
-    description: 'Documenten indienen voor nieuwe aanmelding',
+    description: 'Documenten indienen voor nieuwe aanmelding'
   },
   {
     code: 'B',
     name: 'Bestaande Zaak',
-    description: 'Documenten toevoegen aan bestaand dossier',
-  },
-]);
-const selectedCaseType = ref(null);
-const isValid = computed(() => selectedCaseType.value !== null);
+    description: 'Documenten toevoegen aan bestaand dossier'
+  }
+])
+const selectedCaseCode = ref(null)
+const isValid = computed(() => selectedCaseCode.value !== null)
 function pickCaseType(caseType) {
-  selectedCaseType.value = caseType;
+  selectedCaseCode.value = caseType
   const updatedValidStatus = { ...props.form.valid, [props.name]: isValid.value }
-  emit('update', { casetype: caseType, currentFormIsValid: isValid.value, valid: updatedValidStatus });
+  emit('update', {
+    casetype: caseType,
+    currentFormIsValid: isValid.value,
+    valid: updatedValidStatus
+  })
 }
 onMounted(() => {
   // if we went back and forth, we have to get the input fields from the form
-  if (props.form.caseType) {
-    selectedCaseType.value = props.form.caseType;
+  emit('update', { currentFormIsValid: isValid.value })
+  if (props.form.casetype) {
+    selectedCaseCode.value = props.form.casetype.code
   }
-});
+})
+watch(isValid, (newValue) => {
+  emit('update', { currentFormIsValid: newValue })
+})
 </script>
