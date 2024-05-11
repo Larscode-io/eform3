@@ -79,24 +79,33 @@ const submitData = () => {
     <div class="flex flex-col items-center">
         <h1 class="mb-4 text-2xl font-bold">Details van Indiener</h1>
         <h2>{{ `showError is ${JSON.stringify(showError)}` }}</h2>
+        <h2>{{ `stateDirty is ${Object.values(stateDirty).map((v) => (v ? 'Y' : '-')).join('')}` }}</h2>
+        // show valid info for all input fields
+        <h2>{{ `isMailValid is ${isMailValid}` }}</h2>
+        <h2>{{ `isLastNameValid is ${isLastNameValid}` }}</h2>
+        <h2>{{ `isFirstNameValid is ${isFirstNameValid}` }}</h2>
+
         <form class="w-96" @submit.prevent="submitData">
             <div class="mb-4">
                 <label for="firstName" class="block mb-2">Voornaam</label>
                 <input type="text" id="firstName" v-model="state.firstName"
                     @blur="$event => stateDirty.firstName = true" @input="$event => isValid ? submitData() : null"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    :class="stateDirty.firstName && !isFirstNameValid ? 'border-red-500' : ''" />
             </div>
             <div class="mb-4">
                 <label for="lastName" class="block mb-2">Familienaam</label>
                 <input type="text" id="lastName" v-model="state.lastName" @blur="$event => stateDirty.lastName = true"
                     @input="$event => isValid ? submitData() : null"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    :class="stateDirty.lastName && !isLastNameValid ? 'border-red-500' : ''" />
             </div>
             <div class="mb-4">
                 <label for="email" class="block mb-2">Email</label>
                 <input type="email" id="email" v-model="state.email" @blur="$event => stateDirty.email = true"
                     @input="$event => isValid ? submitData() : null"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    :class="stateDirty.email && !isMailValid ? 'border-red-500' : ''" />
             </div>
         </form>
     </div>
