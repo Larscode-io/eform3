@@ -91,21 +91,33 @@ const submitData = () => {
                 <input type="text" id="firstName" v-model="state.firstName"
                     @blur="$event => stateDirty.firstName = true" @input="$event => isValid ? submitData() : null"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    :class="stateDirty.firstName && !isFirstNameValid ? 'border-red-500' : ''" />
+                    :class="{
+                        'border-red-500': stateDirty.firstName && !isFirstNameValid,
+                        'focus:ring-red-500': stateDirty.firstName && !isFirstNameValid,
+                        'focus:ring-blue-500': stateDirty.firstName && !isFirstNameValid,
+                    }" />
             </div>
             <div class="mb-4">
                 <label for="lastName" class="block mb-2">Familienaam</label>
                 <input type="text" id="lastName" v-model="state.lastName" @blur="$event => stateDirty.lastName = true"
                     @input="$event => isValid ? submitData() : null"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    :class="stateDirty.lastName && !isLastNameValid ? 'border-red-500' : ''" />
+                    :class="{
+                        'border-red-500': stateDirty.lastName && !isLastNameValid,
+                        'focus:ring-red-500': stateDirty.lastName && !isLastNameValid,
+                        'focus:ring-blue-500': stateDirty.lastName && !isLastNameValid,
+                    }" />
             </div>
             <div class="mb-4">
                 <label for="email" class="block mb-2">Email</label>
                 <input type="email" id="email" v-model="state.email" @blur="$event => stateDirty.email = true"
                     @input="$event => isValid ? submitData() : null"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    :class="stateDirty.email && !isMailValid ? 'border-red-500' : ''" />
+                    :class="{
+                        'border-red-500': stateDirty.email && !isMailValid,
+                        'focus:ring-red-500': stateDirty.email && !isMailValid,
+                        'focus:ring-blue-500': !stateDirty.email || isMailValid
+                    }" />
             </div>
         </form>
     </div>
