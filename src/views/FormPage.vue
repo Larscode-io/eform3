@@ -10,7 +10,9 @@
         <button :class="['self-start px-4 py-2 mr-2 text-white  rounded-md', canGoBack ? 'bg-blue-500' : 'bg-gray-300']"
           :disabled="!canGoBack" @click="goBack">Back</button>
         <div>
-          <component :is="currentFormComponent" :form :name @update="processStep" />
+          <Transition>
+            <component :is="currentFormComponent" :form :name @update="processStep" />
+          </Transition>
         </div>
         <button :class="['self-start px-4 py-2 text-white rounded-md', canGoNext ? 'bg-blue-500' : 'bg-gray-300']"
           :disabled="!canGoNext" @click="goNext">Next</button>
@@ -98,5 +100,15 @@ const processStep = (stepData) => {
 .progress-bar-fill {
   @apply h-full bg-blue-500;
   transition: width 0.3s ease;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
