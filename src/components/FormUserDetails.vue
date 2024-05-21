@@ -31,13 +31,13 @@ const isLastNameValid = computed(() => {
 const isFirstNameValid = computed(() => {
     return state.firstName.length > 0;
 });
-const showError = computed(() => {
-    return {
-        email: !isMailValid.value && stateDirty.email,
-        firstName: !isFirstNameValid.value && stateDirty.firstName,
-        lastName: !isLastNameValid.value && stateDirty.lastName,
-    }
-});
+// const showError = computed(() => {
+//     return {
+//         email: !isMailValid.value && stateDirty.email,
+//         firstName: !isFirstNameValid.value && stateDirty.firstName,
+//         lastName: !isLastNameValid.value && stateDirty.lastName,
+//     }
+// });
 const isValid = computed(() =>
     isMailValid.value && isLastNameValid.value && isFirstNameValid.value
 );
@@ -78,13 +78,6 @@ const submitData = () => {
 <template>
     <div class="flex flex-col items-center">
         <h1 class="mb-4 text-2xl font-bold">Details van Indiener</h1>
-        <h2>{{ `showError is ${JSON.stringify(showError)}` }}</h2>
-        <h2>{{ `stateDirty is ${Object.values(stateDirty).map((v) => (v ? 'Y' : '-')).join('')}` }}</h2>
-        // show valid info for all input fields
-        <h2>{{ `isMailValid is ${isMailValid}` }}</h2>
-        <h2>{{ `isLastNameValid is ${isLastNameValid}` }}</h2>
-        <h2>{{ `isFirstNameValid is ${isFirstNameValid}` }}</h2>
-
         <form class="w-96" @submit.prevent="submitData">
             <div class="mb-4">
                 <label for="firstName" class="block mb-2">Voornaam</label>
