@@ -60,11 +60,11 @@ const canGoBack = computed(() => currentStepNumber.value > 1)
 const canGoNext = computed(() => currentStepNumber.value < maxSteps && form.value.currentFormIsValid)
 
 const goBack = () => {
-  transitionDirection.value = 'fade-slide-left'; // Set direction for Back
+  transitionDirection.value = 'fade-slide-back'; // Set direction for Back
   changeStepNumber(-1)
 }
 const goNext = () => {
-  transitionDirection.value = 'fade-slide-right'; // Set direction for Next
+  transitionDirection.value = 'fade-slide-next'; // Set direction for Next
   changeStepNumber(1);
 }
 const changeStepNumber = (change) => {
@@ -89,8 +89,8 @@ const name = computed(() => getComponentName(currentFormComponent.value));
 // Progress bar
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
 
-// Transition direction based on step change
-const transitionDirection = ref('fade-slide-right') // Initialize with default direction
+// Transition direction based on step change: Next or Back
+const transitionDirection = ref('fade-slide-next') // Initialize with default direction
 
 
 // Here we processess the data from the components
@@ -110,22 +110,32 @@ const processStep = (stepData) => {
   transition: opacity 0.1s ease 0.1s, transform 0.1s ease 0.1s;
 }
 
-.fade-slide-right-enter-active,
-.fade-slide-right-leave-active,
-.fade-slide-left-enter-active,
-.fade-slide-left-leave-active {
+.fade-slide-next-enter-active,
+.fade-slide-back-enter-active,
+.fade-slide-back-leave-active,
+.fade-slide-next-leave-active {
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.fade-slide-right-enter-from,
-.fade-slide-left-leave-to {
+/* Going Forward */
+.fade-slide-next-enter-from {
   opacity: 0;
   transform: translateX(100%);
 }
 
-.fade-slide-right-leave-to,
-.fade-slide-left-enter-from {
+.fade-slide-next-leave-to {
   opacity: 0;
   transform: translateX(-100%);
+}
+
+/* Going Back */
+.fade-slide-back-enter-from {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.fade-slide-back-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
 }
 </style>
