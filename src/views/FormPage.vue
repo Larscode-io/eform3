@@ -10,8 +10,8 @@
         <button :class="['self-start px-4 py-2 mr-2 text-white  rounded-md', canGoBack ? 'bg-blue-500' : 'bg-gray-300']"
           :disabled="!canGoBack" @click="goBack">Back</button>
         <div>
-          <Transition>
-            <component :is="currentFormComponent" :form :name @update="processStep" />
+          <Transition :name="transitionDirection" mode="out-in">
+            <component :is="currentFormComponent" :form :name @update="processStep" :key="currentFormComponent" />
           </Transition>
         </div>
         <button :class="['self-start px-4 py-2 text-white rounded-md', canGoNext ? 'bg-blue-500' : 'bg-gray-300']"
@@ -59,8 +59,12 @@ const maxSteps = components.length;
 const canGoBack = computed(() => currentStepNumber.value > 1)
 const canGoNext = computed(() => currentStepNumber.value < maxSteps && form.value.currentFormIsValid)
 
-const goBack = () => { changeStepNumber(-1) }
+const goBack = () => {
+  transitionDirection.value = 'fade-slide-left'; // Set direction for Back
+  changeStepNumber(-1)
+}
 const goNext = () => {
+  transitionDirection.value = 'fade-slide-right'; // Set direction for Next
   changeStepNumber(1);
 }
 const changeStepNumber = (change) => {
@@ -85,6 +89,10 @@ const name = computed(() => getComponentName(currentFormComponent.value));
 // Progress bar
 const progress = computed(() => (currentStepNumber.value) * (100 / maxSteps))
 
+// Transition direction based on step change
+const transitionDirection = ref('fade-slide-right') // Initialize with default direction
+
+
 // Here we processess the data from the components
 const processStep = (stepData) => {
   // merge the data from the form component with the form data
@@ -99,16 +107,25 @@ const processStep = (stepData) => {
 
 .progress-bar-fill {
   @apply h-full bg-blue-500;
-  transition: width 0.3s ease;
+  transition: opacity 0.1s ease 0.1s, transform 0.1s ease 0.1s;
 }
 
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
+.fade-slide-right-enter-active,
+.fade-slide-right-leave-active,
+.fade-slide-left-enter-active,
+.fade-slide-left-leave-active {
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.v-enter-from,
-.v-leave-to {
+.fade-slide-right-enter-from,
+.fade-slide-left-leave-to {
   opacity: 0;
+  transform: translateX(100%);
+}
+
+.fade-slide-right-leave-to,
+.fade-slide-left-enter-from {
+  opacity: 0;
+  transform: translateX(-100%);
 }
 </style>
