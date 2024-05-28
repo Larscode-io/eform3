@@ -20,10 +20,12 @@
       <p>{{ selectedCaseCode }}</p>
     </div>
   </div>
+  <SubscribeMailings />
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import SubscribeMailings from '@/components/SubscribeMailings.vue'
 const emit = defineEmits(['update'])
 const props = defineProps({
   name: String,
