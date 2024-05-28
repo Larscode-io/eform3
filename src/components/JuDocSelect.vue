@@ -5,6 +5,7 @@
                 <option disabled>Specifieer het stuk van rechtspleging dat u neerlegt</option>
                 <option v-for="juDoc in juDocs" :key="juDoc.name" :value="juDoc">
                     <slot name="option" :juDoc>
+                        <!-- juDoc looks like { name: 'MEM', description: 'Memorie' } -->
                         {{ `${juDoc.name} ${juDoc.description}` }}
                     </slot>
                 </option>
