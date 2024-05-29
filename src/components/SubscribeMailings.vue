@@ -193,7 +193,7 @@ const submitRequest = async () => {
                 <button @click="submitRequest" class="px-4 py-2 text-white bg-blue-600 rounded-lg">
                     aanmelden
                 </button>
-                <button @click="showmodal = false" class="px-4 py-2 bg-gray-200 rounded-lg">
+                <button @click="closeModal" class="px-4 py-2 bg-gray-200 rounded-lg">
                     annuleren
                 </button>
             </div>
