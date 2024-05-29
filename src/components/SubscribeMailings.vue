@@ -143,9 +143,9 @@ const submitRequest = async () => {
         <!-- The modal content container holds the actual content of the modal, displayed on top of the backdrop -->
         <div @click.stop class="w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
             <!-- Modal header -->
-            Subscription status: {{ subscriptionStatus }}
+            <!-- Subscription status: {{ subscriptionStatus }}
             Selected list: {{ selected }}
-            Selected mlist: {{ selectedList }}
+            Selected mlist: {{ selectedList }} -->
             <!-- Modal body -->
 
             <div class="py-4">
@@ -177,17 +177,15 @@ const submitRequest = async () => {
                     </div>
                 </form>
                 <p class="mt-2 mb-4 text-gray-600">
-                    U ontvangt vervolgens een e-mail van het e-mailadres [ info_nl-request
-                    @ mailman.const-court.be ], waarin u wordt gevraagd om uw inschrijving
+                    U ontvangt vervolgens een e-mail van het e-mailadres waarin u wordt gevraagd om uw inschrijving
                     te bevestigen door op een link te klikken. Onmiddellijk daarna
-                    ontvangt u van hetzelfde e-mailadres een bevestiging.
+                    ontvangt u een bevestiging die de inschrijving bevestigt.
                 </p>
                 <p class="mt-2 mb-4 text-gray-600">
                     Opgelet, deze e-mails (zowel de e-mail waarin u wordt gevraagd om uw
                     inschrijving te bevestigen als de e-mail ter bevestiging en de e-mails
                     met de nieuwsbrieven) komen mogelijk in de map “ongewenste e-mail”
-                    terecht. U kan dit verhelpen door het e-mailadres toe te voegen aan uw
-                    vertrouwde afzenders.
+                    terecht.
                 </p>
             </div>
             <!-- Modal footer -->
