@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 // Reactive state for modal visibility
 const showModal = ref(true);
@@ -38,7 +38,6 @@ const parser = new DOMParser();
 const subscriptionResponse = computed(() => {
     const defaultResponse = '';
     if (!responseData.value) {
-        console.log('responseData.value is empty');
         return defaultResponse;
     }
 
@@ -48,29 +47,30 @@ const subscriptionResponse = computed(() => {
     if (!bodyElement) return defaultResponse;
 
     const bodyText = bodyElement.textContent;
-    console.log('bodyText:', bodyText);
+    // bodyText: '\n' + 'Resultaat van uw aanmelding bij info_nl\n' + 'Uw aanmeldingsverzoek is ontvangen en zal ...
     return bodyText;
 });
 
 const subscriptionSeemsValid = computed(() => {
     const validSubTextRegex = /Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden|Ihr Abonnement-Antrag ist soeben eingetroffen und wird alsbald bearbeitet.|Your subscription request has been received, and will soon be acted upon|Votre demande d'abonnement a été reçue et sera bientôt traitée./;
     const isValid = validSubTextRegex.test(subscriptionResponse.value);
-    console.log(`validSubTextRegex.test(subscriptionResponse.value) is ${isValid}`);
+    console.log(`subscriptionSeemsValid: ${isValid}`);
     return isValid;
 });
 const emailsSeemsInvalid = computed(() => {
     const invalidEmailTextRegex = /U moet een geldig e-mailadres opgeven./;
     const isInvalid = invalidEmailTextRegex.test(subscriptionResponse.value);
-    console.log(`invalidEmailTextRegex.test(subscriptionResponse.value) is ${isInvalid}`);
+    console.log(`emailsSeemsInvalid: ${isInvalid}`);
     return isInvalid;
 });
 const subscriptionSeemsInvalid = computed(() => {
     const invalidSubTextRegex = /niet geldig|ungültig|not valid|n'est pas valide./;
     const isInvalid = invalidSubTextRegex.test(subscriptionResponse.value);
-    console.log(`invalidSubTextRegex.test(subscriptionResponse.value) is ${isInvalid}`);
+    console.log(`subscriptionSeemsInvalid: ${isInvalid}`);
     return isInvalid;
 });
 
+// Subscription status
 const subscriptionStatus = computed(() => {
     if (subscriptionSeemsValid.value) {
         return 'valid';
@@ -80,6 +80,13 @@ const subscriptionStatus = computed(() => {
         return 'invalid';
     } else {
         return 'unknown';
+    }
+});
+
+// When subscriptionSeemsValid turns to true, close the modal
+watch(subscriptionStatus, (newValue) => {
+    if (newValue === 'valid') {
+        showModal.value = false;
     }
 });
 
@@ -178,7 +185,7 @@ const fetchData = async () => {
                     Aanmelden
                 </button>
                 <button @click="showModal = false" class="px-4 py-2 bg-gray-200 rounded-lg">
-                    Decline
+                    Annuleren
                 </button>
             </div>
         </div>
