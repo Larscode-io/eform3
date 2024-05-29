@@ -15,6 +15,10 @@ const defaultListLang = [
     { lang: Languages.FRENCH, mlist: 'info_fr' },
     { lang: Languages.GERMAN, mlist: 'pdf_de' },
 ];
+// depending on sleected.value, the selected mlist will be used
+const selectedList = computed(() => {
+    return defaultListLang.find((item) => item.lang === selected.value)?.mlist;
+});
 const closeModal = () => {
     showModal.value = false;
 };
@@ -52,7 +56,7 @@ const subscriptionResponse = computed(() => {
 });
 
 const subscriptionSeemsValid = computed(() => {
-    const validSubTextRegex = /Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden|Ihr Abonnement-Antrag ist soeben eingetroffen und wird alsbald bearbeitet.|Your subscription request has been received, and will soon be acted upon|Votre demande d'abonnement a été reçue et sera bientôt traitée./;
+    const validSubTextRegex = /Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden|Ihr Abonnement-Antrag ist soeben eingetroffen|Your subscription request has been received|Votre demande d'abonnement a/;
     const isValid = validSubTextRegex.test(subscriptionResponse.value);
     console.log(`subscriptionSeemsValid: ${isValid}`);
     return isValid;
@@ -93,12 +97,7 @@ watch(subscriptionStatus, (newValue) => {
 const fetchData = async () => {
     try {
         const response = await fetch(
-            // info_nl should be replaced with the selected mlist
-            // depending on the selected language
-            // e.g. info_nl for Dutch
-            // e.g. info_fr for French
-            // e.g. pdf_de for German
-            'https://mailman.const-court.be/mailman/subscribe/info_nl',
+            `https://mailman.const-court.be/mailman/subscribe/${selectedList.value}`,
             {
                 method: 'POST',
                 headers: {
@@ -118,6 +117,17 @@ const fetchData = async () => {
     }
 };
 
+const submitRequest = async () => {
+    if (!selectedList.value) {
+        alert('No language provided');
+        return;
+    }
+    if (!usermail.value.includes('@')) {
+        alert('Invalid email');
+        return;
+    }
+    await fetchData();
+};
 </script>
 
 <template>
@@ -133,8 +143,9 @@ const fetchData = async () => {
         <!-- The modal content container holds the actual content of the modal, displayed on top of the backdrop -->
         <div @click.stop class="w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
             <!-- Modal header -->
-            {{ subscriptionStatus }}
-
+            Subscription status: {{ subscriptionStatus }}
+            Selected list: {{ selected }}
+            Selected mlist: {{ selectedList }}
             <!-- Modal body -->
 
             <div class="py-4">
@@ -181,11 +192,11 @@ const fetchData = async () => {
             </div>
             <!-- Modal footer -->
             <div class="flex justify-end pt-3 space-x-3 border-t">
-                <button @click="fetchData" class="px-4 py-2 text-white bg-blue-600 rounded-lg">
-                    Aanmelden
+                <button @click="submitRequest" class="px-4 py-2 text-white bg-blue-600 rounded-lg">
+                    aanmelden
                 </button>
-                <button @click="showModal = false" class="px-4 py-2 bg-gray-200 rounded-lg">
-                    Annuleren
+                <button @click="showmodal = false" class="px-4 py-2 bg-gray-200 rounded-lg">
+                    annuleren
                 </button>
             </div>
         </div>
