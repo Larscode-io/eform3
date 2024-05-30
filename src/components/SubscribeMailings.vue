@@ -61,6 +61,25 @@ const formDirty = ref({
     mailinglist: false,
 });
 
+const clearAllDirty = () => {
+    console.log('clearAllDirty');
+    console.log('clearAllDirty');
+    console.log('clearAllDirty');
+    Object.entries(formDirty.value).forEach((el) => {
+        const [k,] = el
+        formDirty.value[k] = false
+    });
+}
+const makeAllDirty = () => {
+    console.log('makeAllDirty');
+    console.log('makeAllDirty');
+    console.log('makeAllDirty');
+    Object.entries(formDirty.value).forEach((el) => {
+        const [k,] = el
+        formDirty.value[k] = true
+    });
+};
+
 const formFieldsErrorIndicator = computed(() => {
     return {
         email: formDirty.value.email && !emailIsValid.value,
@@ -110,6 +129,7 @@ const fetchData = async () => {
 
 const submitRequest = async () => {
     form.isSubmitting = true;
+    makeAllDirty();
     await fetchData();
 
     form.isSubmitting = false;
@@ -166,6 +186,8 @@ watch(mailmanSubmitIsValid, () => {
             form.selectedLang = '';
             form.isSubmitting = false;
             showModal.value = false;
+            responseData.value = '';
+            clearAllDirty();
         }, 5000);
     } else if (emailsSeemsInvalid.value) {
         form.userFeedbackMessage = 'U moet een geldig e-mailadres opgeven.';
