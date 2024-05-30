@@ -19,8 +19,8 @@
       <h2 class="text-xl font-bold">Uw keuze</h2>
       <p>{{ selectedCaseCode }}</p>
     </div>
+    <SubscribeMailings />
   </div>
-  <SubscribeMailings />
 </template>
 
 <script setup>

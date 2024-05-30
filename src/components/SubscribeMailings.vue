@@ -1,6 +1,13 @@
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
+import { useMailmanStatus } from '@/composables/useMailmanStatus.js';
 
+const { isOnline, error, loading, isMailmanOnline } = useMailmanStatus();
+const isMailmanStatusButtonClicked = ref(false);
+const checkMailmanStatus = async () => {
+    isMailmanStatusButtonClicked.value = true;
+    await isMailmanOnline();
+};
 const showModal = ref(true);
 const Languages = {
     ENGLISH: 'en',
@@ -62,18 +69,12 @@ const formDirty = ref({
 });
 
 const clearAllDirty = () => {
-    console.log('clearAllDirty');
-    console.log('clearAllDirty');
-    console.log('clearAllDirty');
     Object.entries(formDirty.value).forEach((el) => {
         const [k,] = el
         formDirty.value[k] = false
     });
 }
 const makeAllDirty = () => {
-    console.log('makeAllDirty');
-    console.log('makeAllDirty');
-    console.log('makeAllDirty');
     Object.entries(formDirty.value).forEach((el) => {
         const [k,] = el
         formDirty.value[k] = true
@@ -198,83 +199,104 @@ watch(mailmanSubmitIsValid, () => {
     }
 
 });
+
+
+
 </script>
 
 <template>
-    <!-- Button to toggle the modal -->
-    <button @click="showModal = true" class="px-4 py-2 text-white bg-blue-600 rounded-lg">
-        Inschrijven nieuwsbrief
-    </button>
+    <div>
+        <!-- Button to toggle the modal -->
+        <button @click="showModal = true" class="px-4 py-2 text-white bg-blue-600 rounded-lg">
+            Inschrijven nieuwsbrief
+        </button>
 
-    <!-- Modal -->
-    <!-- The backdrop is a semi-transparent layer to obscure the page content behind it. -->
-    <div @click="closeModal" v-if="showModal"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-        <!-- The modal content container holds the actual content of the modal, displayed on top of the backdrop -->
-        <div @click.stop class="w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
-            <!-- Modal header -->
-            <!-- Modal body -->
+        <!-- Modal -->
+        <!-- The backdrop is a semi-transparent layer to obscure the page content behind it. -->
+        <div @click="closeModal" v-if="showModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+            <!-- The modal content container holds the actual content of the modal, displayed on top of the backdrop -->
+            <div @click.stop class="w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
+                <!-- Modal header -->
 
-            <div class="py-4">
-                <p class="text-gray-600">
-                    U kan zich abonneren op de nieuwsbrief van het Hof door uw e-mailadres
-                    hieronder in te voeren.
-                </p>
+                <!-- Modal body -->
 
-                <form>
-                    <div class="grid gap-6 mb-6 md:grid-cols-2">
-                        <div>
-                            <label for="mailid"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Geef uw
-                                e-mail:</label>
-                            <input type="email" id="mailid" @blur="formDirty.email = true"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-2"
-                                :class="{ 'border-red-500': formFieldsErrorIndicator?.email }" placeholder="John"
-                                required v-model="form.usermail" />
-                            <p v-if="formFieldsErrorIndicator?.email" class="text-sm text-red-500">Ongeldig email
-                                address
-                            </p>
-                            <label for="mailings"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kies de gewenste
-                                taal van de
-                                nieuwsbrief:</label>
-                            <select id="mailings" @change="formDirty.mailinglist = true"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                v-model="form.selectedLang">
-                                <option v-for="i in defaultListLang" :value="i.lang" :key="i.lang">
-                                    {{ translateLang(i.lang) }}
-                                </option>
-                            </select>
+                <div class="py-4">
+                    <p class="mb-4 text-gray-600">
+                        U kan zich abonneren op de nieuwsbrief van het Hof door uw e-mailadres
+                        hieronder in te voeren en op “Aanmelden” te klikken.
+                    </p>
+
+                    <form>
+                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                            <div>
+                                <label for="mailid"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Geef uw
+                                    e-mail:</label>
+                                <input type="email" id="mailid" @blur="formDirty.email = true"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-2"
+                                    :class="{ 'border-red-500': formFieldsErrorIndicator?.email }" placeholder="John"
+                                    required v-model="form.usermail" />
+                                <p v-if="formFieldsErrorIndicator?.email" class="text-sm text-red-500">Ongeldig email
+                                    address
+                                </p>
+                                <label for="mailings"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kies de
+                                    gewenste
+                                    taal van de
+                                    nieuwsbrief:</label>
+                                <select id="mailings" @change="formDirty.mailinglist = true"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                    v-model="form.selectedLang">
+                                    <option v-for="i in defaultListLang" :value="i.lang" :key="i.lang">
+                                        {{ translateLang(i.lang) }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
 
-                <div v-if="form.userFeedbackMessage" class="p-2 mt-2 font-bold text-white bg-purple-900 rounded">
-                    {{ form.userFeedbackMessage }}
+                    <div v-if="form.userFeedbackMessage" class="p-2 mt-2 font-bold text-white bg-purple-900 rounded">
+                        {{ form.userFeedbackMessage }}
+                    </div>
+                    <div v-else>
+                        <p class="mt-2 mb-4 text-gray-600">
+                            U ontvangt vervolgens een e-mail waarin u wordt gevraagd om uw inschrijving te bevestigen
+                            door
+                            op een link te klikken. Onmiddellijk daarna
+                            ontvangt u een bevestiging die de inschrijving bevestigt.
+                        </p>
+                        <p class="mt-2 mb-4 text-gray-600">
+                            Opgelet, deze e-mails kunnen mogelijk in de map “ongewenste e-mail” terechtkomen: zowel de
+                            e-mail waarin u wordt gevraagd om uw inschrijving te bevestigen, als de e-mail ter
+                            bevestiging en de e-mails met de nieuwsbrieven.
+
+                        </p>
+                    </div>
                 </div>
-                <div v-else>
-                    <p class="mt-2 mb-4 text-gray-600">
-                        U ontvangt vervolgens een e-mail waarin u wordt gevraagd om uw inschrijving te bevestigen door
-                        op een link te klikken. Onmiddellijk daarna
-                        ontvangt u een bevestiging die de inschrijving bevestigt.
-                    </p>
-                    <p class="mt-2 mb-4 text-gray-600">
-                        Opgelet, deze e-mails (zowel de e-mail waarin u wordt gevraagd om uw
-                        inschrijving te bevestigen als de e-mail ter bevestiging en de e-mails
-                        met de nieuwsbrieven) komen mogelijk in de map “ongewenste e-mail”
-                        terecht.
-                    </p>
+                <div>
+                    <button @click="checkMailmanStatus" :disabled="loading"
+                        class="px-4 py-2 text-white bg-blue-300 rounded-lg ">Controleer de nieuwsbrief server</button>
+                    <div v-if="loading">Loading...</div>
+                    <div v-if="error">Error: {{ error }}</div>
+                    <div v-if="isOnline">
+                        <span style="color: green;">✓</span> Mailman is online!
+                    </div>
+                    <div v-else-if="!loading && !error && isMailmanStatusButtonClicked">
+                        <span style="color: red;">✗</span> Mailman is offline.
+                    </div>
                 </div>
-            </div>
-            <!-- Modal footer -->
-            <div class="flex justify-end pt-3 space-x-3 border-t">
-                <button :disabled="form.isSubmitting || !formIsValid" @click="submitRequest"
-                    class="px-4 py-2 text-white rounded-lg" :class="formIsValid ? 'bg-blue-600' : 'bg-gray-400'">
-                    {{ form.isSubmitting ? 'Aanmelden...' : 'Aanmelden' }}
-                </button>
-                <button @click="closeModal" class="px-4 py-2 bg-gray-200 rounded-lg">
-                    Annuleren
-                </button>
+                <!-- Modal footer -->
+                <div class="flex justify-end pt-3 space-x-3 border-t">
+                    <button :disabled="form.isSubmitting || !formIsValid" @click="submitRequest"
+                        class="px-4 py-2 text-white rounded-lg" :class="formIsValid ? 'bg-blue-600' : 'bg-gray-400'">
+                        {{ form.isSubmitting ? 'Aanmelden...' : 'Aanmelden' }}
+                    </button>
+                    <button @click="closeModal" class="px-4 py-2 bg-gray-200 rounded-lg">
+                        Annuleren
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
