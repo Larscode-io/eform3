@@ -1,9 +1,7 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 
-// Reactive state for modal visibility
 const showModal = ref(true);
-const selected = ref('');
 const Languages = {
     ENGLISH: 'en',
     FRENCH: 'fr',
@@ -15,18 +13,37 @@ const defaultListLang = [
     { lang: Languages.FRENCH, mlist: 'info_fr' },
     { lang: Languages.GERMAN, mlist: 'pdf_de' },
 ];
-// depending on sleected.value, the selected mlist will be used
-const selectedList = computed(() => {
-    return defaultListLang.find((item) => item.lang === selected.value)?.mlist;
-});
 const closeModal = () => {
     showModal.value = false;
 };
-const usermail = ref('');
 
+const form = reactive({
+    usermail: '',
+    selectedLang: '',
+});
+
+const selectedList = computed(() => {
+    return defaultListLang.find((item) => item.lang === form.selectedLang)?.mlist;
+});
+
+// Validation PRE submit request to mailman
+const emailIsValid = computed(() => {
+    const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return form.usermail.length > 0 && emailPattern.test(form.usermail.toLowerCase());
+});
+const listHasBeenSelected = computed(() => {
+    return selectedList.value !== undefined;
+});
+const formIsValid = computed(() => {
+    return emailIsValid.value && listHasBeenSelected.value;
+});
+
+
+
+// PRE submit request to mailman
 const params = computed(() => {
     return {
-        email: usermail.value?.replace(/(["'|])/g, '\\'),
+        email: form.usermail?.replace(/(["'|])/g, '\\'),
         'login-remind': 'Subscribe',
     };
 });
@@ -37,62 +54,7 @@ const queryString = computed(() => {
         .join('&');
 });
 
-const responseData = ref('');
-const parser = new DOMParser();
-const subscriptionResponse = computed(() => {
-    const defaultResponse = '';
-    if (!responseData.value) {
-        return defaultResponse;
-    }
 
-    const doc = parser.parseFromString(responseData.value, 'text/html');
-    const bodyElement = doc.querySelector('body');
-
-    if (!bodyElement) return defaultResponse;
-
-    const bodyText = bodyElement.textContent;
-    // bodyText: '\n' + 'Resultaat van uw aanmelding bij info_nl\n' + 'Uw aanmeldingsverzoek is ontvangen en zal ...
-    return bodyText;
-});
-
-const subscriptionSeemsValid = computed(() => {
-    const validSubTextRegex = /Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden|Ihr Abonnement-Antrag ist soeben eingetroffen|Your subscription request has been received|Votre demande d'abonnement a/;
-    const isValid = validSubTextRegex.test(subscriptionResponse.value);
-    console.log(`subscriptionSeemsValid: ${isValid}`);
-    return isValid;
-});
-const emailsSeemsInvalid = computed(() => {
-    const invalidEmailTextRegex = /U moet een geldig e-mailadres opgeven./;
-    const isInvalid = invalidEmailTextRegex.test(subscriptionResponse.value);
-    console.log(`emailsSeemsInvalid: ${isInvalid}`);
-    return isInvalid;
-});
-const subscriptionSeemsInvalid = computed(() => {
-    const invalidSubTextRegex = /niet geldig|ungültig|not valid|n'est pas valide./;
-    const isInvalid = invalidSubTextRegex.test(subscriptionResponse.value);
-    console.log(`subscriptionSeemsInvalid: ${isInvalid}`);
-    return isInvalid;
-});
-
-// Subscription status
-const subscriptionStatus = computed(() => {
-    if (subscriptionSeemsValid.value) {
-        return 'valid';
-    } else if (emailsSeemsInvalid.value) {
-        return 'invalid email';
-    } else if (subscriptionSeemsInvalid.value) {
-        return 'invalid';
-    } else {
-        return 'unknown';
-    }
-});
-
-// When subscriptionSeemsValid turns to true, close the modal
-watch(subscriptionStatus, (newValue) => {
-    if (newValue === 'valid') {
-        showModal.value = false;
-    }
-});
 
 const fetchData = async () => {
     try {
@@ -118,16 +80,80 @@ const fetchData = async () => {
 };
 
 const submitRequest = async () => {
-    if (!selectedList.value) {
-        alert('No language provided');
-        return;
-    }
-    if (!usermail.value.includes('@')) {
-        alert('Invalid email');
-        return;
-    }
+    // if (!form.selectedList) {
+    //     alert('No language provided');
+    //     return;
+    // }
+    // if (!form.usermail.includes('@')) {
+    //     alert('Invalid email');
+    //     return;
+    // }
     await fetchData();
 };
+
+// POST submit request to mailman
+const responseData = ref('');
+const parser = new DOMParser();
+const subscriptionResponse = computed(() => {
+    const defaultResponse = '';
+    if (!responseData.value) {
+        return defaultResponse;
+    }
+
+    const doc = parser.parseFromString(responseData.value, 'text/html');
+    const bodyElement = doc.querySelector('body');
+
+    if (!bodyElement) return defaultResponse;
+
+    const bodyText = bodyElement.textContent;
+    // bodyText: '\n' + 'Resultaat van uw aanmelding bij info_nl\n' + 'Uw aanmeldingsverzoek is ontvangen en zal ...
+    return bodyText;
+});
+
+// POST submit request to mailman
+const subscriptionSeemsValid = computed(() => {
+    const validSubTextRegex = /Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden|Ihr Abonnement-Antrag ist soeben eingetroffen|Your subscription request has been received|Votre demande d'abonnement a/;
+    const isValid = validSubTextRegex.test(subscriptionResponse.value);
+    console.log(`subscriptionSeemsValid: ${isValid}`);
+    return isValid;
+});
+const emailsSeemsInvalid = computed(() => {
+    const invalidEmailTextRegex = /U moet een geldig e-mailadres opgeven./;
+    const isInvalid = invalidEmailTextRegex.test(subscriptionResponse.value);
+    console.log(`emailsSeemsInvalid: ${isInvalid}`);
+    return isInvalid;
+});
+
+const subscriptionSeemsInvalid = computed(() => {
+    const invalidSubTextRegex = /niet geldig|ungültig|not valid|n'est pas valide./;
+    const isInvalid = invalidSubTextRegex.test(subscriptionResponse.value);
+    console.log(`subscriptionSeemsInvalid: ${isInvalid}`);
+    return isInvalid;
+});
+
+const mailmanSubmitIsValid = computed(() => {
+    return subscriptionSeemsValid.value && !emailsSeemsInvalid.value && !subscriptionSeemsInvalid.value;
+});
+
+const subscriptionStatus = computed(() => {
+    if (subscriptionSeemsValid.value) {
+        return 'valid';
+    } else if (emailsSeemsInvalid.value) {
+        return 'invalid email';
+    } else if (subscriptionSeemsInvalid.value) {
+        return 'invalid';
+    } else {
+        return 'unknown';
+    }
+});
+
+// subscriptionSeemsValid true ? close the modal
+watch(subscriptionStatus, (newValue) => {
+    if (newValue === 'valid') {
+        // showModal.value = false;
+        console.log('Subscription seems valid and modal should be closed now.');
+    }
+});
 </script>
 
 <template>
@@ -143,6 +169,13 @@ const submitRequest = async () => {
         <!-- The modal content container holds the actual content of the modal, displayed on top of the backdrop -->
         <div @click.stop class="w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
             <!-- Modal header -->
+            emailIsValid: {{ emailIsValid }}
+            listHasBeenSelected: {{ listHasBeenSelected }}
+            formIsValid: {{ formIsValid }}
+            mailmanSubmitIsValid: {{ mailmanSubmitIsValid }}
+            subscriptionSeemsValid: {{ subscriptionSeemsValid }}
+            emailsSeemsInvalid: {{ emailsSeemsInvalid }}
+            subscriptionSeemsInvalid: {{ subscriptionSeemsInvalid }}
             <!-- Subscription status: {{ subscriptionStatus }}
             Selected list: {{ selected }}
             Selected mlist: {{ selectedList }} -->
@@ -162,13 +195,13 @@ const submitRequest = async () => {
                                 e-mail:</label>
                             <input type="email" id="mailid"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-2"
-                                placeholder="John" required v-model="usermail" />
+                                placeholder="John" required v-model="form.usermail" />
                             <label for="mailings"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kies de taal van de
                                 gewenste nieuwsbrief:</label>
                             <select id="mailings"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                v-model="selected">
+                                v-model="form.selectedLang">
                                 <option v-for="i in defaultListLang" :value="i.lang" :key="i.lang">
                                     {{ i.lang }}
                                 </option>
