@@ -18,11 +18,11 @@ const translateLang = (lang) => {
         case Languages.ENGLISH:
             return 'Engels';
         case Languages.FRENCH:
-            return 'Frans';
+            return 'Nieuwsbrief in het Frans';
         case Languages.DUTCH:
-            return 'Nederlands';
+            return 'Nieuwsbrief in het Nederlands';
         case Languages.GERMAN:
-            return 'Duits';
+            return 'Nieuwsbrief in het Duits (niet voor alle arresten en zonder trefwoorden)';
         default:
             return 'Onbekend';
     }
