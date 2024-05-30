@@ -55,11 +55,18 @@ const formIsValid = computed(() => {
 });
 
 // when the form is dirty, the user has interacted with the form
-// and we should show error messages = TODO
-// const formDirty = ref({
-//     email: false,
-//     mailinglist: false,
-// });
+// from that moment we want to show the validation messages
+const formDirty = ref({
+    email: false,
+    mailinglist: false,
+});
+
+const formFieldsErrorIndicator = computed(() => {
+    return {
+        email: formDirty.value.email && !emailIsValid.value,
+        mailinglist: formDirty.value.mailinglist && !listHasBeenSelected.value,
+    };
+});
 
 // PRE submit request to mailman
 const params = computed(() => {
@@ -102,14 +109,6 @@ const fetchData = async () => {
 };
 
 const submitRequest = async () => {
-    // if (!form.selectedList) {
-    //     alert('No language provided');
-    //     return;
-    // }
-    // if (!form.usermail.includes('@')) {
-    //     alert('Invalid email');
-    //     return;
-    // }
     form.isSubmitting = true;
     await fetchData();
 
@@ -206,14 +205,18 @@ watch(mailmanSubmitIsValid, () => {
                             <label for="mailid"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Geef uw
                                 e-mail:</label>
-                            <input type="email" id="mailid"
+                            <input type="email" id="mailid" @blur="formDirty.email = true"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-2"
-                                placeholder="John" required v-model="form.usermail" />
+                                :class="{ 'border-red-500': formFieldsErrorIndicator?.email }" placeholder="John"
+                                required v-model="form.usermail" />
+                            <p v-if="formFieldsErrorIndicator?.email" class="text-sm text-red-500">Ongeldig email
+                                address
+                            </p>
                             <label for="mailings"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kies de gewenste
                                 taal van de
                                 nieuwsbrief:</label>
-                            <select id="mailings"
+                            <select id="mailings" @change="formDirty.mailinglist = true"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 v-model="form.selectedLang">
                                 <option v-for="i in defaultListLang" :value="i.lang" :key="i.lang">
