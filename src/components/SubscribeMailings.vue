@@ -112,28 +112,14 @@ const submitRequest = async () => {
     // }
     form.isSubmitting = true;
     await fetchData();
-    if (mailmanSubmitIsValid.value) {
-        form.userFeedbackMessage = 'Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden verwerkt.';
-        setTimeout(() => {
-            form.userFeedbackMessage = '';
-            // form.usermail = '';
-            // form.selectedLang = '';
-            // form.isSubmitting = false;
-            // showModal.value = false;
-        }, 2000);
-    } else if (emailsSeemsInvalid.value) {
-        form.userFeedbackMessage = 'U moet een geldig e-mailadres opgeven.';
-    } else if (subscriptionSeemsInvalid.value) {
-        form.userFeedbackMessage = 'Uw aanmeldingsverzoek is niet geldig.';
-    } else {
-        form.userFeedbackMessage = 'Er is een fout opgetreden bij het aanmelden. Probeer het later opnieuw.';
-    }
+
     form.isSubmitting = false;
 };
 
 // POST submit request to mailman
 const responseData = ref('');
 const parser = new DOMParser();
+
 const subscriptionResponse = computed(() => {
     const defaultResponse = '';
     if (!responseData.value) {
@@ -154,20 +140,17 @@ const subscriptionResponse = computed(() => {
 const subscriptionSeemsValid = computed(() => {
     const validSubTextRegex = /Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden|Ihr Abonnement-Antrag ist soeben eingetroffen|Your subscription request has been received|Votre demande d'abonnement a/;
     const isValid = validSubTextRegex.test(subscriptionResponse.value);
-    console.log(`subscriptionSeemsValid: ${isValid}`);
     return isValid;
 });
 const emailsSeemsInvalid = computed(() => {
-    const invalidEmailTextRegex = /U moet een geldig e-mailadres opgeven.|L'adresse courriel fournie n'est pas valide./;
+    const invalidEmailTextRegex = /Die von Ihnen angegebene E-Mail-Adresse ist ungültig|Het door u opgegeven e-mailadres is niet geldig|adresse courriel fournie n'est pas valide./;
     const isInvalid = invalidEmailTextRegex.test(subscriptionResponse.value);
-    console.log(`emailsSeemsInvalid: ${isInvalid}`);
     return isInvalid;
 });
 
 const subscriptionSeemsInvalid = computed(() => {
     const invalidSubTextRegex = /niet geldig|ungültig|not valid|n'est pas valide./;
     const isInvalid = invalidSubTextRegex.test(subscriptionResponse.value);
-    console.log(`subscriptionSeemsInvalid: ${isInvalid}`);
     return isInvalid;
 });
 
@@ -175,24 +158,24 @@ const mailmanSubmitIsValid = computed(() => {
     return subscriptionSeemsValid.value && !emailsSeemsInvalid.value && !subscriptionSeemsInvalid.value;
 });
 
-const subscriptionStatus = computed(() => {
-    if (subscriptionSeemsValid.value) {
-        return 'valid';
+watch(mailmanSubmitIsValid, () => {
+    if (mailmanSubmitIsValid.value) {
+        form.userFeedbackMessage = 'Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden verwerkt.';
+        setTimeout(() => {
+            form.userFeedbackMessage = '';
+            form.usermail = '';
+            form.selectedLang = '';
+            form.isSubmitting = false;
+            showModal.value = false;
+        }, 5000);
     } else if (emailsSeemsInvalid.value) {
-        return 'invalid email';
+        form.userFeedbackMessage = 'U moet een geldig e-mailadres opgeven.';
     } else if (subscriptionSeemsInvalid.value) {
-        return 'invalid';
+        form.userFeedbackMessage = 'Uw aanmeldingsverzoek is niet geldig.';
     } else {
-        return 'unknown';
+        form.userFeedbackMessage = 'Er is een fout opgetreden bij het aanmelden. Probeer het later opnieuw.';
     }
-});
 
-// subscriptionSeemsValid true ? close the modal
-watch(subscriptionStatus, (newValue) => {
-    if (newValue === 'valid') {
-        // showModal.value = false;
-        console.log('Subscription seems valid and modal should be closed now.');
-    }
 });
 </script>
 
@@ -209,8 +192,6 @@ watch(subscriptionStatus, (newValue) => {
         <!-- The modal content container holds the actual content of the modal, displayed on top of the backdrop -->
         <div @click.stop class="w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
             <!-- Modal header -->
-            formSelectedList {{ selectedList }}
-            formSeletedLang {{ form.selectedLang }}
             <!-- Modal body -->
 
             <div class="py-4">
@@ -243,7 +224,7 @@ watch(subscriptionStatus, (newValue) => {
                     </div>
                 </form>
 
-                <div v-if="form.userFeedbackMessage" class="p-2 mt-2 rounded">
+                <div v-if="form.userFeedbackMessage" class="p-2 mt-2 font-bold text-white bg-purple-900 rounded">
                     {{ form.userFeedbackMessage }}
                 </div>
                 <div v-else>
