@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { useMailmanStatus } from '@/composables/useMailmanStatus.js';
 
 const { isOnline, error, loading, isMailmanOnline } = useMailmanStatus();
@@ -44,7 +44,12 @@ const form = reactive({
     isSubmitting: false,
     userFeedbackMessage: '',
 });
-
+const resetForm = () => {
+    form.usermail = '';
+    form.selectedLang = '';
+    form.isSubmitting = false;
+    form.userFeedbackMessage = '';
+};
 const selectedList = computed(() => {
     return defaultListLang.find((item) => item.lang === form.selectedLang)?.mlist;
 });
@@ -130,8 +135,27 @@ const fetchData = async () => {
 
 const submitRequest = async () => {
     form.isSubmitting = true;
+
     makeAllDirty();
     await fetchData();
+
+    // We check the content of the response of the mailman server
+    // to determine if the subscription was successful
+    if (mailmanSubmitIsValid.value) {
+        form.userFeedbackMessage = 'Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden verwerkt.';
+        setTimeout(() => {
+            resetForm();
+            showModal.value = false;
+            responseData.value = '';
+            clearAllDirty();
+        }, 5000);
+    } else if (emailsSeemsInvalid.value) {
+        form.userFeedbackMessage = 'U moet een geldig e-mailadres opgeven.';
+    } else if (subscriptionSeemsInvalid.value) {
+        form.userFeedbackMessage = 'Uw aanmeldingsverzoek is niet geldig.';
+    } else {
+        form.userFeedbackMessage = 'Er is een fout opgetreden bij het aanmelden. Probeer het later opnieuw.';
+    }
 
     form.isSubmitting = false;
 };
@@ -178,53 +202,27 @@ const mailmanSubmitIsValid = computed(() => {
     return subscriptionSeemsValid.value && !emailsSeemsInvalid.value && !subscriptionSeemsInvalid.value;
 });
 
-watch(mailmanSubmitIsValid, () => {
-    if (mailmanSubmitIsValid.value) {
-        form.userFeedbackMessage = 'Uw aanmeldingsverzoek is ontvangen en zal zo spoedig mogelijk worden verwerkt.';
-        setTimeout(() => {
-            form.userFeedbackMessage = '';
-            form.usermail = '';
-            form.selectedLang = '';
-            form.isSubmitting = false;
-            showModal.value = false;
-            responseData.value = '';
-            clearAllDirty();
-        }, 5000);
-    } else if (emailsSeemsInvalid.value) {
-        form.userFeedbackMessage = 'U moet een geldig e-mailadres opgeven.';
-    } else if (subscriptionSeemsInvalid.value) {
-        form.userFeedbackMessage = 'Uw aanmeldingsverzoek is niet geldig.';
-    } else {
-        form.userFeedbackMessage = 'Er is een fout opgetreden bij het aanmelden. Probeer het later opnieuw.';
-    }
-
-});
-
-
-
 </script>
 
 <template>
     <div>
-        <!-- Button to toggle the modal -->
         <button @click="showModal = true" class="px-4 py-2 text-white bg-blue-600 rounded-lg">
             Inschrijven nieuwsbrief
         </button>
 
         <!-- Modal -->
-        <!-- The backdrop is a semi-transparent layer to obscure the page content behind it. -->
+        <!-- Semi-transparent backdrop to obscure the page content behind it. -->
         <div @click="closeModal" v-if="showModal"
             class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
             <!-- The modal content container holds the actual content of the modal, displayed on top of the backdrop -->
             <div @click.stop class="w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
                 <!-- Modal header -->
-
                 <!-- Modal body -->
 
                 <div class="py-4">
                     <p class="mb-4 text-gray-600">
-                        U kan zich abonneren op de nieuwsbrief van het Hof door uw e-mailadres
-                        hieronder in te voeren en op “Aanmelden” te klikken.
+                        U kan zich abonneren op de nieuwsbrief van het Hof door uw e-mailadres hieronder in te voeren en
+                        op “Aanmelden” te klikken.
                     </p>
 
                     <form>
@@ -237,14 +235,12 @@ watch(mailmanSubmitIsValid, () => {
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-2"
                                     :class="{ 'border-red-500': formFieldsErrorIndicator?.email }" placeholder="John"
                                     required v-model="form.usermail" />
-                                <p v-if="formFieldsErrorIndicator?.email" class="text-sm text-red-500">Ongeldig email
-                                    address
+                                <p v-if="formFieldsErrorIndicator?.email" class="text-sm text-red-500">
+                                    Ongeldig email address
                                 </p>
                                 <label for="mailings"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kies de
-                                    gewenste
-                                    taal van de
-                                    nieuwsbrief:</label>
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Kies de gewenste taal van de nieuwsbrief:</label>
                                 <select id="mailings" @change="formDirty.mailinglist = true"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                     v-model="form.selectedLang">
@@ -255,7 +251,6 @@ watch(mailmanSubmitIsValid, () => {
                             </div>
                         </div>
                     </form>
-
                     <div v-if="form.userFeedbackMessage" class="p-2 mt-2 font-bold text-white bg-purple-900 rounded">
                         {{ form.userFeedbackMessage }}
                     </div>
@@ -276,7 +271,7 @@ watch(mailmanSubmitIsValid, () => {
                 </div>
                 <div>
                     <button @click="checkMailmanStatus" :disabled="loading"
-                        class="px-4 py-2 text-white bg-blue-300 rounded-lg ">Controleer de nieuwsbrief server</button>
+                        class="px-4 py-2 text-white bg-blue-300 rounded-lg ">Controleer server</button>
                     <div v-if="loading">Loading...</div>
                     <div v-if="error">Error: {{ error }}</div>
                     <div v-if="isOnline">
