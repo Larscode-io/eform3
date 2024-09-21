@@ -206,6 +206,7 @@ const mailmanSubmitIsValid = computed(() => {
 
 <template>
     <div>
+        <!-- Button to toggle the modal -->
         <button @click="showModal = true" class="px-4 py-2 text-white bg-blue-600 rounded-lg">
             Inschrijven nieuwsbrief
         </button>
@@ -236,7 +237,7 @@ const mailmanSubmitIsValid = computed(() => {
                                     :class="{ 'border-red-500': formFieldsErrorIndicator?.email }" placeholder="John"
                                     required v-model="form.usermail" />
                                 <p v-if="formFieldsErrorIndicator?.email" class="text-sm text-red-500">
-                                    Ongeldig email address
+                                    Een geldig email adres is nodig.
                                 </p>
                                 <label for="mailings"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -257,15 +258,13 @@ const mailmanSubmitIsValid = computed(() => {
                     <div v-else>
                         <p class="mt-2 mb-4 text-gray-600">
                             U ontvangt vervolgens een e-mail waarin u wordt gevraagd om uw inschrijving te bevestigen
-                            door
-                            op een link te klikken. Onmiddellijk daarna
-                            ontvangt u een bevestiging die de inschrijving bevestigt.
+                            door op een link te klikken. Onmiddellijk daarna ontvangt u een bevestiging die de
+                            inschrijving bevestigt.
                         </p>
                         <p class="mt-2 mb-4 text-gray-600">
                             Opgelet, deze e-mails kunnen mogelijk in de map “ongewenste e-mail” terechtkomen: zowel de
                             e-mail waarin u wordt gevraagd om uw inschrijving te bevestigen, als de e-mail ter
                             bevestiging en de e-mails met de nieuwsbrieven.
-
                         </p>
                     </div>
                 </div>
