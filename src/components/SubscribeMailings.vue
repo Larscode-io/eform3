@@ -290,7 +290,6 @@ const mailmanSubmitIsValid = computed(() => {
                         Annuleren
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
